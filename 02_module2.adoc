@@ -1,91 +1,168 @@
-= IaCStart - So it Begins
+= IaCStart - Initial Deployment
 
-By now you should have gotten an introduction what Infrastructure-as-Code is all about, what you can expect in your game and what core technologies you'll use. Before you will dive into building infrastructures here is a short introduction what you'll do next:
+By now you should have access to your 
 
-* The first step is to get access to the tools you'll use: Github, Ansible Tower and the AWS console.
-* To get you started you'll get some simple tasks with a lot of help from this guide and the facilitators.
-* Afterwards you'll get game modules with tasks that 
-** will get increasingly more complex
-** come with less help
+* AWS account and web console
+* Github account
+* Ansible Tower web interface
 
-= Let's get started
+And the follwoing tasks should have been completed:
 
-Without further ado let's simply get started, you'll get more instructions on your way.
+* AWS user and access key/SSH key have been created
+* Github repos with IaC Playbooks and application code have been cloned into your team account
+* Ansible Tower is configured with your AWS credentials and Github repositories
 
-TIP: Remember to have Fun!
+WARNING: If not please don't proceed and ask for assistance!
 
-== Prepare your Teams Github Account
+== Using Ansible Tower Workflows
 
-IaC is build on, well, the code that describes your Infrastructure. This content has to live somewhere. So the first step is to create a Github account for your team and to add content which was already prepared for you.
+Workflows are a feature that Tower adds to Ansible Automation. You basically link separate Playbooks (which could have been authored by different people) into one "Meta-Playbook".
 
-=== Create the account
+We'll use Workflows in our scenario, just remember they are part of Tower's feature set and are not part of Ansible Engine/command line. So let's get started, you have a repository filled with Playbooks you need to integrate using Tower.
 
+== Create an empty Tower Workflow
 
-=== Clone Content 
+As a starting point create the Workflow without running any Playbooks, we'll add them one by one later on.
 
-== Access the Amazon Webservices Console
+* Open your Ansible Tower web interface.
+* In the menu bar to the left choose *Resources -> Templates*.
+* In the upper right click the green *+* icon and choose *Workflow Template*.
+* Enter a name for the Workflow: *iacstart* and click the *SAVE* button.
 
-Everything you'll do during this game is about deploying cloud-based infrastructures. We'll use Amazon Webservices which can be accessed using APIs or in a web console. 
+The visual workflow designer opens, hit the *CLOSE* button it for now. Now let's add the first Playbook to have Ansible actually do something. To use an Ansible Playbook as part of a workflow you have to:
 
-== Access Ansible Tower
+* Create a Job Template using a Playbook.
+* Add the Job Template to the Workflow Template.
 
-As you've learned already Ansible Tower is an execution environment for running Ansible automation in Enterprise IT environments. To get access to Tower's web interface you just have to fire up a browser and point it to:
+== Create an AWS *Virtual Private Cloud* (VPC)
+
+As already discussed during the introduction the first resource you need in AWS (and other clouds) is a VPC to separate your infrastructure components from other stuff probably running in your cloud environment.
+
+The Playbook named `create_vpc_complete.yml` already exists in your Github repository. First create a Job Template to make it usable in Tower:
+
+=== Create Job Template
+
+* In *Resources -> Templates* click the green *+* and choose *Job Template*. Fill in the needed fields:
+
+* Name it
+** *Name*: *iac_create_vpc*
+* What hosts to run on 
+** *Inventory*: localhost
+* The Github repo
+** *Project*: iacstart
+* Choos the Playbook from the repo
+** *Playbook*: create_vpc_complete.yml
+* What credentials to use
+** *Credentials*: AWS
+* And finally click *SAVE*
+
+WARNING: While you get more familiar with Ansible Tower we'll use less and less verbose instructions in this guide.
+
+=== Add Template to Workflow
+
+Now add the Job Template to your Workflow using the Workflow Visualizer:
+
+* In Tower's web interface open your Workflow Template by going to *Resources -> Templates* and then clicking your workflow template name.
+* Click the *WORKFLOW VISUALIZER* button
+* You get an empty workflow window. 
+
+Add the first Node by clicking *START*, an empty node gets added, configure it in the frame to the right: 
+
+* Leave the node type as *Template*
+* Search and select the *iac_create_vpc* job template
+* Click the *SELECT* button
+* Click *SAVE*
+
+[TIP] 
+.What have you done so far? 
+====
+You have:
+
+* Created an empty Workflow
+* Created a Job Template to run a Playbook
+* Added the template as the first step/node in your workflow
+====
+
+=== Parameterize and Run the Workflow
+
+You could now run the Workflow (it would of course only execute the first Playbook) but something is missing: Have a look at the `create_vpc_complete.yml` Playbook in Github. In the Ansible-code are a good number of *{{ ... }}* constructs. These are variables which have to be filled with content, making the Playbook more versatile without always changing the code itself.
+
+There are multiple ways to supply variable content to a Playbook/Job Template, in out case put it into the Worflow definition in Tower:
+
+* Open the Workflow configuration in Tower
+* Find the text field *EXTRA VARIABLES*
+* Add the following variable definitions:
 
 ----
-https://your.towerurl.com
+---
+vpc: "iacstart"
+vpc_cidr: "10.0.0.0/16"
+subnet_cidr: "10.0.1.0/24"
+state: "present"
+region: "eu-central-1"
 ----
 
-Login as user `admin` with the password given to you by the facilitators. By now your Tower is pretty empty, have a look around anyway.
+WARING: Make sure to keep the *---* in place as they are! This tells Tower the format is YAML.
 
-= Task 1: Configure Ansible Tower for AWS
+*You are ready to run the workflow*
 
-The first step is to configure Ansible Tower to talk to AWS using your account credentials. This is straight forward, you have to create an AWS access key and configure it in Tower as a cloud credential. To do so work though these steps:
+* Go to *Resources -> Templates* and click the "Rocket" icon for your workflow to launch it.
+* Watch it run, you can get detailed information by clicking the *DETAILS* button of the workflow node.
 
-* In the AWS console, create a new access key
-* Download the key (you will not be able to access the key content again later)
-* Bring up the Tower web interface and configure a new cloud credential:
-** Under ....
-** Give a name and enter the key ID and the secret key
-** Save the credentials
+Your Workflow should have created a new VPC, check in the AWS console. Now try to run the workflow again. As your IaC automation is idempotent it describes of how "things should be" regardless how many times you run it.
 
-TIP: Note that after saving you can't access the secret key anymore, this is one of Tower's features: you can use credentials for running jobs, but you can't get them!
+=== Create AWS Instances in your VPC
+Ansible
+The next step in your Infrastructure-as-Code setup is to deploy two cloud instances (Virtual Machines) to run your application. In the cloud you usually don't install operating systems from scratch, AWS (and other cloud providers) come with a large number of pre-made images you can use to start your instances. In AWS these are called "Amazon Machine Images (AMI)".
 
-== Check Tower can talk to AWS
+A Playbook to start instances in AWS already exists in your Github repo, but you need some information to pass as parameters:
 
-With the credentials in place you'll run a first simple job to see if everything works as expected. During the preparation steps you cloned a Github repository with a lot of Ansible content to your Github account.
+* An *AMI ID*, basically what image/operating system to use.
+* What *SSH Key* to inject into the instance, so Ansible can later on connect to it using SSH. You already created this key during the AWS setup steps.
 
-TIP: Ansible content is mainly the Playbooks, which are the "recipes" which describe what steps should be automated in your IT environment. In addition Ansible automation content can be variable files, files, file templates and more. But one step after the other.
+==== Find the AMI ID
 
-So to check everything works and to walk you through the process of setting up and running Anibsle automation against AWS do the following in the Tower web UI:
+There are multiple ways to find an AMI suitable for your application. In our scenario you are going to  use *CentOS 7* in the latest release as operating system. So you have to:
 
-* Create a new *Project*. Projects in Tower are basically pointers to version control systems holding the needed files, in this case your Github repository.
-** detailed steps
-* Now create a *Job Template*. Tower Job Templates describe an Ansible job (like a blueprint) which can later be used to actually start a job.
-** detailed steps
+* Find the proper AMI ID to pass to the Playbook
+* Make sure the AMI was created from a reliable source
 
-So now you have configured Tower to run one of the Playbooks from your Github repo. Before starting it, have a look at the Playbook to get an idea how it looks like and to get an idea what it might do.
+Finding the proper AMI ID can be tricky, here take this road:
 
-TIP: Ansible Playbooks always contain some headers with specifics about how to run it and then, most importantly, a list of one or more tasks. Ansible tasks use so called modules to do the dirty work together with some parameters to specify the job.
+* Go to *www.centos.org -> Get CentOS now -> Amazon Web Services*
+* This will take you to the AWS Marketplace
+* On the overview page click *CentOS 7 (x86_64) - with Updates HVM*
+* You'll now get lots of information about the image, click the *Continue to Subscribe* button to the upper right.
+* Now click the *Continue to Configuration* button (bear with me, nearly there...)
+* AMI IDs are region-specific, on the next page choose *EU (Frankfurt)* as *Region* and, lo and behold, you'll get the AMI ID to the right.
+* Copy it
 
-Here is your Playbook:
+NOTE: Even if this feels tiresome for now, remember you would have to go through these steps only once, after your automation is finished you can just execute it again and again.
+
+=== Extend the Workflow 
+
+Now your are ready to extend your workflow by adding the Playbook for creating instances. You have done the required steps already when integrating the VPC creation into the workflow. Here is what you have to do:
+
+* Create a Job Template named *iac_create_instance* pointing to the `create_instance.yml` Playbook.
+* Define the variables needed by the Playbook (fill in the AMI ID you found for the CentOS AMI and the name of your SSH key) by adding the following to the *EXTRA VARIABLES*:
 
 ----
-XXXX
+ami_id: "<AMI ID>>"
+ssh_key: "<SSH Key>"
 ----
 
-Doesn't look to complicated, what do you think? All it does is to create a *EC2 Elastic IP* in your account which can be attached to instances (virtual machines) later.
+* Extend your workflow using the *WORKFLOW VISUALIZER* to add a new node after the node creating the VPC. Configure the node to run the *iac_create_instance* Job Template.
 
-=== Start the First Ansible Job
+*Go and execute the Workflow Template!*
 
-It's time now to see everything comes together. In the *Job Template* view in Tower click the "Rocket" icon to run a job from the template. Have a good look at the output, at the end it should say:
 
-XXXXXX
 
-An error would stick out to you in red, but it should be fine for now. You have created a *AWS EIP* basically using some textfiles in a Github repository! 
 
-For the fun of it go to your AWS web console to make sure the EIP is actually there!
 
-XXX 
+
+
+
+
 
 
 
