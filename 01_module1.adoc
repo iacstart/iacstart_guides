@@ -61,6 +61,7 @@ To get access to Tower's web interface you just have to fire up a browser. The U
 By now your Tower is pretty empty, have a look around anyway.
 
 == Task 1: Configure Ansible Tower for AWS
+=== Create Cloud Access Credentials
 
 The first step is to configure Ansible Tower to talk to AWS using your account credentials. This is straight forward, you have to use the AWS access key, which you've downloaded during the AWS user setup and configure it in Tower as a cloud credential. 
 To do so work through these steps:
@@ -72,7 +73,7 @@ To do so work through these steps:
 ** Save the credentials
 
 
-== Check Tower can talk to AWS
+=== Add the Github Repository as Tower Project
 
 With the credentials in place, you'll run a first simple job to see if everything works as expected. During the preparation steps, you cloned a GitHub repository with a lot of Ansible content to your GitHub account.
 
@@ -90,6 +91,7 @@ So to check everything works and to walk you through the process of setting up a
 *** SCM URL (Your Repository, the URL can be copied by opening the repository on GitHub, click the "Clone or download" button and then the clipboard icon)
 ** Save the project
 
+=== First Test: Create a Job Template
 
 * Now create a *Job Template*. Tower Job Templates describe an Ansible job (like a blueprint) which can later be used to start a job.
 
