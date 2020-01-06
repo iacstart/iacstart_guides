@@ -104,6 +104,8 @@ region: "eu-central-1"
 
 WARING: Make sure to keep the *---* in place as they are! This tells Tower the format is YAML.
 
+* Click *SAVE*
+
 *You are ready to run the workflow*
 
 * Go to *Resources -> Templates* and click the "Rocket" icon for your workflow to launch it.
@@ -112,7 +114,7 @@ WARING: Make sure to keep the *---* in place as they are! This tells Tower the f
 Your Workflow should have created a new VPC, check in the AWS console. Now try to run the workflow again. As your IaC automation is idempotent it describes of how "things should be" regardless how many times you run it.
 
 === Create AWS Instances in your VPC
-Ansible
+
 The next step in your Infrastructure-as-Code setup is to deploy two cloud instances (Virtual Machines) to run your application. In the cloud you usually don't install operating systems from scratch, AWS (and other cloud providers) come with a large number of pre-made images you can use to start your instances. In AWS these are called "Amazon Machine Images (AMI)".
 
 A Playbook to start instances in AWS already exists in your Github repo, but you need some information to pass as parameters:

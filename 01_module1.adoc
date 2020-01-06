@@ -69,7 +69,9 @@ To do so work through these steps:
 * Bring up the Tower web interface and configure a new cloud credential:
 ** Select "Credentials" in the left menu
 ** Add a new Cloud Credential by clicking the "+" button
-** Give a name and enter, select "Amazone Web Service" as type, access key, and the secret key. The keys can be found in the downloaded CSV file from AWS. 
+** Fill in the *NAME* field with *AWS* 
+** In the *CREDENTIAL TYPE* Field, click the magnifyning glass and select *Amazon Web Services*"* as type
+** Now the fields *ACCESS KEY* and *SECRET KEY* open, enter the respective keys. The keys can be found in the downloaded CSV file from AWS. 
 ** Save the credentials
 
 
@@ -89,6 +91,9 @@ So to check everything works and to walk you through the process of setting up a
 *** Project Name "IaC Start"
 *** SCM Type "Git"
 *** SCM URL (Your Repository, the URL can be copied by opening the repository on GitHub, click the "Clone or download" button and then the clipboard icon)
+
+WARNING: Make sure to use the *https* URL
+
 ** Save the project
 
 === First Test: Create a Job Template
@@ -100,8 +105,8 @@ So to check everything works and to walk you through the process of setting up a
 ** Add a new Job Template by clicking the "+" button and select "Job Template"
 *** Name "Elastic IP"
 *** Job Type "Run"
-*** Project "IaC Start"
 *** Inventory "Demo Inventory"
+*** Project "IaC Start"
 *** Playbook "allocate_eip.yml"
 *** Credentials "AWS" (Type: "Amazon Web Services" )
 
@@ -144,8 +149,8 @@ For the fun of it go to your AWS web console to make sure the EIP is there!
 
 * Open the AWS console https://console.aws.amazon.com/
 * Log-in with the provided Credentials
-* Verify that you are connected to the *Europa (Frankfurt)eu-central-1* Region in the top right corner. If not, change to that region.
 * Open the EC2 Console within the service menu
+* Verify that you are connected to the *Europa (Frankfurt)eu-central-1* Region in the top right corner. If not, change to that region.
 * Click on the "Elastic IPs" in the middle of the screen
 * Write down the Public IPv4 address, which was created by the playbook before.
 
