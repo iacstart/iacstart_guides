@@ -1,8 +1,8 @@
 = IaCStart - So it Begins
 
-By now you should have gotten an introduction what Infrastructure-as-Code is all about, what you can expect in your game and what core technologies you'll use. Before you will dive into building infrastructures here is a short introduction what you'll do next:
+By now you should have gotten an introduction to what Infrastructure-as-Code is all about, what you can expect in your game and what core technologies you'll use. Before you will dive into building infrastructures here is a short introduction what you'll do next:
 
-* The first step is to get access to the tools you'll use: Github, Ansible Tower and the AWS console.
+* The first step is to get access to the tools you'll use: Github, Ansible Tower, and the AWS console.
 * To get you started you'll get some simple tasks with a lot of help from this guide and the facilitators.
 * Afterwards you'll get game modules with tasks that 
 ** will get increasingly more complex
@@ -12,18 +12,37 @@ By now you should have gotten an introduction what Infrastructure-as-Code is all
 
 Without further ado let's simply get started, you'll get more instructions on your way.
 
-TIP: Remember to have Fun!
+TIP: Remember to have fun!
 
 == Prepare your Teams Github Account
 
-IaC is build on, well, the code that describes your Infrastructure. This content has to live somewhere. So the first step is to create a Github account for your team and to add content which was already prepared for you.
+IaC is built on, well, the code that describes your Infrastructure. This content has to live somewhere. So the first step is to create a Github account for your team and to add content that was already prepared for you.
 
-=== Create the account
+=== Create the account and clone content
 
-
-=== Clone Content 
+. Open github.com
+. Log-in with your existing GitHub Account or create a new one
+. Fork the Playbooks into your Account. To do so:
+.. Open https://github.com/iacstart/aws_playbooks
+.. Click on "Fork" in the upper right corner of the website and choose your Account as target
 
 == Access the Amazon Webservices Console
+
+. Open the AWS console https://console.aws.amazon.com/
+. Log-in with the provided Credentials
+. Create new User to work with
+.. Open the IAM-Console (Service Menu on the top)
+.. Select on the left site the User menu
+.. Provide a username of your choice
+.. Check the "Programmatic access" and "AWS Management Console access" checkboxes
+.. Provide a custom password and deselect the "User must create a new password at next sign-in" checkbox
+.. Click "Next: Permissions"
+.. Select "Attach existing policies directly" and select "AdministratorAccess" in the policy list
+.. Click "Next: Tags" and leave the tags unchanged and click "Next: Review" to review the user settings
+.. If everything looks right, click the "Create User" Button
+. After the user is successfully created, a result page will be shown, where you can download the access key for later use. 
+To do so, click on the "Download .csv" button and store the file on your machine.
+
 
 Everything you'll do during this game is about deploying cloud-based infrastructures. We'll use Amazon Webservices which can be accessed using APIs or in a web console. 
 
@@ -39,7 +58,7 @@ Login as user `admin` with the password given to you by the facilitators. By now
 
 = Task 1: Configure Ansible Tower for AWS
 
-The first step is to configure Ansible Tower to talk to AWS using your account credentials. This is straight forward, you have to create an AWS access key and configure it in Tower as a cloud credential. To do so work though these steps:
+The first step is to configure Ansible Tower to talk to AWS using your account credentials. This is straight forward, you have to create an AWS access key and configure it in Tower as a cloud credential. To do so work through these steps:
 
 * In the AWS console, create a new access key
 * Download the key (you will not be able to access the key content again later)
@@ -52,20 +71,20 @@ TIP: Note that after saving you can't access the secret key anymore, this is one
 
 == Check Tower can talk to AWS
 
-With the credentials in place you'll run a first simple job to see if everything works as expected. During the preparation steps you cloned a Github repository with a lot of Ansible content to your Github account.
+With the credentials in place, you'll run a first simple job to see if everything works as expected. During the preparation steps, you cloned a Github repository with a lot of Ansible content to your Github account.
 
-TIP: Ansible content is mainly the Playbooks, which are the "recipes" which describe what steps should be automated in your IT environment. In addition Ansible automation content can be variable files, files, file templates and more. But one step after the other.
+TIP: Ansible content is mainly the Playbooks, which are the "recipes" which describe what steps should be automated in your IT environment. Besides Ansible automation content can be variable files, files, file templates and more. But one step after the other.
 
 So to check everything works and to walk you through the process of setting up and running Anibsle automation against AWS do the following in the Tower web UI:
 
-* Create a new *Project*. Projects in Tower are basically pointers to version control systems holding the needed files, in this case your Github repository.
+* Create a new *Project*. Projects in Tower are pointers to version control systems holding the needed files, in this case, your Github repository.
 ** detailed steps
-* Now create a *Job Template*. Tower Job Templates describe an Ansible job (like a blueprint) which can later be used to actually start a job.
+* Now create a *Job Template*. Tower Job Templates describe an Ansible job (like a blueprint) which can later be used to start a job.
 ** detailed steps
 
-So now you have configured Tower to run one of the Playbooks from your Github repo. Before starting it, have a look at the Playbook to get an idea how it looks like and to get an idea what it might do.
+So now you have configured Tower to run one of the Playbooks from your Github repo. Before starting it, have a look at the Playbook to get an idea of how it looks like and to get an idea of what it might do.
 
-TIP: Ansible Playbooks always contain some headers with specifics about how to run it and then, most importantly, a list of one or more tasks. Ansible tasks use so called modules to do the dirty work together with some parameters to specify the job.
+TIP: Ansible Playbooks always contain some headers with specifics about how to run it and then, most importantly, a list of one or more tasks. Ansible tasks use so-called modules to do the dirty work together with some parameters to specify the job.
 
 Here is your Playbook:
 
@@ -73,19 +92,20 @@ Here is your Playbook:
 XXXX
 ----
 
-Doesn't look to complicated, what do you think? All it does is to create a *EC2 Elastic IP* in your account which can be attached to instances (virtual machines) later.
+It doesn't look too complicated, what do you think? All it does is to create an *EC2 Elastic IP* in your account which can be attached to instances (virtual machines) later.
 
 === Start the First Ansible Job
 
-It's time now to see everything comes together. In the *Job Template* view in Tower click the "Rocket" icon to run a job from the template. Have a good look at the output, at the end it should say:
+It's time now to see everything come together. In the *Job Template* view in Tower click the "Rocket" icon to run a job from the template. Have a good look at the output, in the end, it should say:
 
 XXXXXX
 
-An error would stick out to you in red, but it should be fine for now. You have created a *AWS EIP* basically using some textfiles in a Github repository! 
+An error would stick out to you in red, but it should be fine for now. You have created an *AWS EIP* basically using some textfiles in a Github repository! 
 
-For the fun of it go to your AWS web console to make sure the EIP is actually there!
+For the fun of it go to your AWS web console to make sure the EIP is there!
 
 XXX 
+
 
 
 
