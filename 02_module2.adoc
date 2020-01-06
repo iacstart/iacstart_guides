@@ -1,0 +1,95 @@
+= IaCStart - So it Begins
+
+By now you should have gotten an introduction what Infrastructure-as-Code is all about, what you can expect in your game and what core technologies you'll use. Before you will dive into building infrastructures here is a short introduction what you'll do next:
+
+* The first step is to get access to the tools you'll use: Github, Ansible Tower and the AWS console.
+* To get you started you'll get some simple tasks with a lot of help from this guide and the facilitators.
+* Afterwards you'll get game modules with tasks that 
+** will get increasingly more complex
+** come with less help
+
+= Let's get started
+
+Without further ado let's simply get started, you'll get more instructions on your way.
+
+TIP: Remember to have Fun!
+
+== Prepare your Teams Github Account
+
+IaC is build on, well, the code that describes your Infrastructure. This content has to live somewhere. So the first step is to create a Github account for your team and to add content which was already prepared for you.
+
+=== Create the account
+
+
+=== Clone Content 
+
+== Access the Amazon Webservices Console
+
+Everything you'll do during this game is about deploying cloud-based infrastructures. We'll use Amazon Webservices which can be accessed using APIs or in a web console. 
+
+== Access Ansible Tower
+
+As you've learned already Ansible Tower is an execution environment for running Ansible automation in Enterprise IT environments. To get access to Tower's web interface you just have to fire up a browser and point it to:
+
+----
+https://your.towerurl.com
+----
+
+Login as user `admin` with the password given to you by the facilitators. By now your Tower is pretty empty, have a look around anyway.
+
+= Task 1: Configure Ansible Tower for AWS
+
+The first step is to configure Ansible Tower to talk to AWS using your account credentials. This is straight forward, you have to create an AWS access key and configure it in Tower as a cloud credential. To do so work though these steps:
+
+* In the AWS console, create a new access key
+* Download the key (you will not be able to access the key content again later)
+* Bring up the Tower web interface and configure a new cloud credential:
+** Under ....
+** Give a name and enter the key ID and the secret key
+** Save the credentials
+
+TIP: Note that after saving you can't access the secret key anymore, this is one of Tower's features: you can use credentials for running jobs, but you can't get them!
+
+== Check Tower can talk to AWS
+
+With the credentials in place you'll run a first simple job to see if everything works as expected. During the preparation steps you cloned a Github repository with a lot of Ansible content to your Github account.
+
+TIP: Ansible content is mainly the Playbooks, which are the "recipes" which describe what steps should be automated in your IT environment. In addition Ansible automation content can be variable files, files, file templates and more. But one step after the other.
+
+So to check everything works and to walk you through the process of setting up and running Anibsle automation against AWS do the following in the Tower web UI:
+
+* Create a new *Project*. Projects in Tower are basically pointers to version control systems holding the needed files, in this case your Github repository.
+** detailed steps
+* Now create a *Job Template*. Tower Job Templates describe an Ansible job (like a blueprint) which can later be used to actually start a job.
+** detailed steps
+
+So now you have configured Tower to run one of the Playbooks from your Github repo. Before starting it, have a look at the Playbook to get an idea how it looks like and to get an idea what it might do.
+
+TIP: Ansible Playbooks always contain some headers with specifics about how to run it and then, most importantly, a list of one or more tasks. Ansible tasks use so called modules to do the dirty work together with some parameters to specify the job.
+
+Here is your Playbook:
+
+----
+XXXX
+----
+
+Doesn't look to complicated, what do you think? All it does is to create a *EC2 Elastic IP* in your account which can be attached to instances (virtual machines) later.
+
+=== Start the First Ansible Job
+
+It's time now to see everything comes together. In the *Job Template* view in Tower click the "Rocket" icon to run a job from the template. Have a good look at the output, at the end it should say:
+
+XXXXXX
+
+An error would stick out to you in red, but it should be fine for now. You have created a *AWS EIP* basically using some textfiles in a Github repository! 
+
+For the fun of it go to your AWS web console to make sure the EIP is actually there!
+
+XXX 
+
+
+
+
+
+
+
