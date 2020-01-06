@@ -8,79 +8,101 @@ By now you should have gotten an introduction to what Infrastructure-as-Code is 
 ** will get increasingly more complex
 ** come with less help
 
-= Let's get started
+== Let's get started
 
 Without further ado let's simply get started, you'll get more instructions on your way.
 
 TIP: Remember to have fun!
 
-== Prepare your Teams Github Account
+
+== Source Code Management with GitHub
 
 IaC is built on, well, the code that describes your Infrastructure. This content has to live somewhere. So the first step is to create a Github account for your team and to add content that was already prepared for you.
 
-=== Create the account and clone content
 
-. Open github.com
-. Log-in with your existing GitHub Account or create a new one
-. Fork the Playbooks into your Account. To do so:
-.. Open https://github.com/iacstart/aws_playbooks
-.. Click on "Fork" in the upper right corner of the website and choose your Account as target
+=== Create your GitHub team account and clone the repository
 
-== Access the Amazon Webservices Console
+* Open https://github.com
+* Log-in with your existing GitHub account or create a new one
+* Fork the Playbooks into your Account. To do so:
+** Open https://github.com/iacstart/aws_playbooks
+** Click on "Fork" in the upper right corner of the website and choose your Account as target
 
-. Open the AWS console https://console.aws.amazon.com/
-. Log-in with the provided Credentials
-. Create new User to work with
-.. Open the IAM-Console (Service Menu on the top)
-.. Select on the left site the User menu
-.. Provide a username of your choice
-.. Check the "Programmatic access" and "AWS Management Console access" checkboxes
-.. Provide a custom password and deselect the "User must create a new password at next sign-in" checkbox
-.. Click "Next: Permissions"
-.. Select "Attach existing policies directly" and select "AdministratorAccess" in the policy list
-.. Click "Next: Tags" and leave the tags unchanged and click "Next: Review" to review the user settings
-.. If everything looks right, click the "Create User" Button
-. After the user is successfully created, a result page will be shown, where you can download the access key for later use. 
-To do so, click on the "Download .csv" button and store the file on your machine.
-
+== Cloud Enviroment on AWS 
 
 Everything you'll do during this game is about deploying cloud-based infrastructures. We'll use Amazon Webservices which can be accessed using APIs or in a web console. 
 
-== Access Ansible Tower
+=== Access the Amazon Webservices Console
 
-As you've learned already Ansible Tower is an execution environment for running Ansible automation in Enterprise IT environments. To get access to Tower's web interface you just have to fire up a browser and point it to:
-
-----
-https://your.towerurl.com
-----
-
-Login as user `admin` with the password given to you by the facilitators. By now your Tower is pretty empty, have a look around anyway.
-
-= Task 1: Configure Ansible Tower for AWS
-
-The first step is to configure Ansible Tower to talk to AWS using your account credentials. This is straight forward, you have to create an AWS access key and configure it in Tower as a cloud credential. To do so work through these steps:
-
-* In the AWS console, create a new access key
-* Download the key (you will not be able to access the key content again later)
-* Bring up the Tower web interface and configure a new cloud credential:
-** Under ....
-** Give a name and enter the key ID and the secret key
-** Save the credentials
+* Open the AWS console https://console.aws.amazon.com/
+* Log-in with the provided Credentials
+* Create new User to work with
+** Open the IAM-Console (Service Menu on the top)
+** Select on the left site the User menu
+** Provide a username of your choice
+** Check the "Programmatic access" and "AWS Management Console access" checkboxes
+** Provide a custom password and deselect the "User must create a new password at next sign-in" checkbox
+** Click "Next: Permissions"
+** Select "Attach existing policies directly" and select "AdministratorAccess" in the policy list
+** Click "Next: Tags" and leave the tags unchanged and click "Next: Review" to review the user settings
+** If everything looks right, click the "Create User" Button
+* After the user is successfully created, a result page will be shown, where you can download the access key for later use. 
+To do so, click on the "Download .csv" button and store the file on your machine.
 
 TIP: Note that after saving you can't access the secret key anymore, this is one of Tower's features: you can use credentials for running jobs, but you can't get them!
 
+TODO: SSH KEY
+
+=== Automation System with Ansible Tower
+
+As you've learned already Ansible Tower is an execution environment for running Ansible automation in Enterprise IT environments. 
+To get access to Tower's web interface you just have to fire up a browser. The URL, Username, and password will be provided separate per Team by the facilitators. 
+
+By now your Tower is pretty empty, have a look around anyway.
+
+== Task 1: Configure Ansible Tower for AWS
+
+The first step is to configure Ansible Tower to talk to AWS using your account credentials. This is straight forward, you have to use the AWS access key, which you've downloaded during the AWS user setup and configure it in Tower as a cloud credential. 
+To do so work through these steps:
+
+* Bring up the Tower web interface and configure a new cloud credential:
+** Select "Credentials" in the left menu
+** Add a new Cloud Credential by clicking the "+" button
+** Give a name and enter, select "Amazone Web Service" as type, access key, and the secret key. The keys can be found in the downloaded CSV file from AWS. 
+** Save the credentials
+
+
 == Check Tower can talk to AWS
 
-With the credentials in place, you'll run a first simple job to see if everything works as expected. During the preparation steps, you cloned a Github repository with a lot of Ansible content to your Github account.
+With the credentials in place, you'll run a first simple job to see if everything works as expected. During the preparation steps, you cloned a GitHub repository with a lot of Ansible content to your GitHub account.
 
 TIP: Ansible content is mainly the Playbooks, which are the "recipes" which describe what steps should be automated in your IT environment. Besides Ansible automation content can be variable files, files, file templates and more. But one step after the other.
 
 So to check everything works and to walk you through the process of setting up and running Anibsle automation against AWS do the following in the Tower web UI:
 
 * Create a new *Project*. Projects in Tower are pointers to version control systems holding the needed files, in this case, your Github repository.
-** detailed steps
+
+** Bring up the Tower web interface
+** Select "Projects" in the left menu
+** Add a new Project by clicking the "+" button
+*** Project Name "IaC Start"
+*** SCM Type "Git"
+*** SCM URL (Your Repository, the URL can be copied by opening the repository on GitHub, click the "Clone or download" button and then the clipboard icon)
+** Save the project
+
+
 * Now create a *Job Template*. Tower Job Templates describe an Ansible job (like a blueprint) which can later be used to start a job.
-** detailed steps
+
+** Bring up the Tower web interface
+** Select "Templates" in the left menu
+** Add a new Job Template by clicking the "+" button and select "Job Template"
+*** Name "Elastic IP"
+*** Job Type "Run"
+*** Project "IaC Start"
+*** Inventory "Demo Inventory"
+*** Playbook "allocate_eip.yml"
+*** Credentials "AWS" (Type: "Amazon Web Services" )
+
 
 So now you have configured Tower to run one of the Playbooks from your Github repo. Before starting it, have a look at the Playbook to get an idea of how it looks like and to get an idea of what it might do.
 
@@ -89,7 +111,17 @@ TIP: Ansible Playbooks always contain some headers with specifics about how to r
 Here is your Playbook:
 
 ----
-XXXX
+---
+- hosts: localhost
+    connection: local
+    gather_facts: False
+
+    tasks:
+    - name: allocate a new elastic IP without associating it to anything
+    ec2_eip:
+        state: present
+        region: eu-central-1
+    register: eip
 ----
 
 It doesn't look too complicated, what do you think? All it does is to create an *EC2 Elastic IP* in your account which can be attached to instances (virtual machines) later.
@@ -98,13 +130,25 @@ It doesn't look too complicated, what do you think? All it does is to create an 
 
 It's time now to see everything come together. In the *Job Template* view in Tower click the "Rocket" icon to run a job from the template. Have a good look at the output, in the end, it should say:
 
-XXXXXX
+----
+PLAY RECAP ******************************************** 
 
-An error would stick out to you in red, but it should be fine for now. You have created an *AWS EIP* basically using some textfiles in a Github repository! 
+localhost                  : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
+----
+
+An error would stick out to you in red, but it should be fine for now. You have created an *AWS EIP* using some textfiles in a Github repository! 
 
 For the fun of it go to your AWS web console to make sure the EIP is there!
 
-XXX 
+* Open the AWS console https://console.aws.amazon.com/
+* Log-in with the provided Credentials
+* Verify that you are connected to the *Europa (Frankfurt)eu-central-1* Region in the top right corner. If not, change to that region.
+* Open the EC2 Console within the service menu
+* Click on the "Elastic IPs" in the middle of the screen
+* Write down the Public IPv4 address, which was created by the playbook before.
+
+WARNING: Communicate the IP address togther with the team name to the facilitators. aka. *MR. DNS*
+
 
 
 
