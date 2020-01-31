@@ -1,4 +1,99 @@
+:git: https://github.com/iacstart/iac_shop.git 
+
 = IaCStart - Let's deploy your first app on AWS
+
+Before we start with our Infrastructure-as-Code game, you will provision a small application manual. 
+
+== Let's get started
+
+Without further ado let's simply get started, you'll get more instructions on your way.
+
+TIP: Remember to have fun!
+
+
+== Description of the target enviroment
+
+You will need to build to virtual servers. 
+Here are the specifications of the servers:
+
+=== Web server:
+
+* Instance Size: t2.micro
+* Disk Size: 8GB
+* AMI Image: Amazon Linux 2 AMI (HVM), SSD Volume Type
+* Network Access: SSH, HTTP, and HTTPS from any source
+* Tag: Managed:Manual
+
+=== Database server:
+
+* Instance Size: t2.micro
+* Disk Size: 8GB
+* AMI Image: Amazon Linux 2 AMI (HVM), SSD Volume Type
+* Network Acess: SSH from any source, mySQL from web servers
+* Tag: Managed:Manual
+
+=== Additional steps: 
+
+To run the web appliction some packages and configuration are need. 
+
+* Additional Software: git, rubb, mariadb developer libraries, build essentials and policykit-1
+* gem package: bundler
+* create the folder "/opt/iac_shop" and do clone the git repoitory *{git}*
+* install the GEM file, which is in the installation folder
+* copy the *webshop.service* file from the installation folder to */etc/systemd/system/webshop.service*
+
+
+To setup the database with the content, run the following commands on the web server after the database server is created. 
+
+----
+bundle exec rake db:create
+bundle exec rake db:migrate
+bundle exec rake db:setup
+----
+
+== Cloud Environment on AWS 
+
+Everything you'll do during this game is about deploying cloud-based infrastructures. We'll use Amazon Webservices which can be accessed using APIs or in a web console. 
+
+=== Access the Amazon Webservices Console and create your user to work with
+
+* Open the AWS console https://console.aws.amazon.com/
+* Log-in with the provided Credentials
+* Create new User to work with
+** Open the IAM-Console (Service Menu on the top)
+** Select on the left site the User menu
+** Provide a username of your choice
+** Check the "Programmatic access" and "AWS Management Console access" checkboxes
+** Provide a custom password and deselect the "User must create a new password at next sign-in" checkbox
+** Click "Next: Permissions"
+** Select "Attach existing policies directly" and select "AdministratorAccess" in the policy list
+** Click "Next: Tags" and leave the tags unchanged and click "Next: Review" to review the user settings
+** If everything looks right, click the "Create User" Button
+* After the user is successfully created, a result page will be shown, where you can download the access key for later use. 
+To do so, click on the "Download .csv" button and store the file on your machine.
+* Logout from the AWS console and login again with the created user. 
+* Verify that you are connected to the *USA Ost Nord-Virginia us-east-1* Region in the top right corner. If not, change to that region.
+
+=== Create a VPC
+The VPC is your virtual datacenter, where all the ressources will be located. 
+The VPC boudary is the network. 
+Please us the following CIDR for your VPC 10.4.0.0/20
+
+=== Create a Subnet within the VPC
+
+
+=== Create the EC2 instances for Web and DB
+
+=== Configure the web server
+
+
+== Review what you have done so far.
+
+* You have log-in into the AWS console and created a user to work with. 
+* You have created the *access key* to access the AWS API and an *ssh key pair* to login into the servers on AWS.
+* You have created your first VPC, Subnet, and virtual servers on AWS.
+* You've installed and configured the web service and database on the servers.
+
 
 
 

@@ -1,3 +1,5 @@
+:git: https://github.com/iacstart/aws_playbooks
+
 = IaCStart - So it Begins
 
 By now you should have gotten an introduction to what Infrastructure-as-Code is all about, what you can expect in your game and what core technologies you'll use. Before you will dive into building infrastructures here is a short introduction what you'll do next:
@@ -25,31 +27,8 @@ IaC is built on, well, the code that describes your Infrastructure. This content
 * Open https://github.com
 * Log-in with your existing GitHub account or create a new one
 * Fork the Playbooks into your Account. To do so:
-** Open https://github.com/iacstart/aws_playbooks
+** Open {git}
 ** Click on "Fork" in the upper right corner of the website and choose your Account as target
-
-== Cloud Environment on AWS 
-
-Everything you'll do during this game is about deploying cloud-based infrastructures. We'll use Amazon Webservices which can be accessed using APIs or in a web console. 
-
-=== Access the Amazon Webservices Console
-
-* Open the AWS console https://console.aws.amazon.com/
-* Log-in with the provided Credentials
-* Create new User to work with
-** Open the IAM-Console (Service Menu on the top)
-** Select on the left site the User menu
-** Provide a username of your choice
-** Check the "Programmatic access" and "AWS Management Console access" checkboxes
-** Provide a custom password and deselect the "User must create a new password at next sign-in" checkbox
-** Click "Next: Permissions"
-** Select "Attach existing policies directly" and select "AdministratorAccess" in the policy list
-** Click "Next: Tags" and leave the tags unchanged and click "Next: Review" to review the user settings
-** If everything looks right, click the "Create User" Button
-* After the user is successfully created, a result page will be shown, where you can download the access key for later use. 
-To do so, click on the "Download .csv" button and store the file on your machine.
-
-TIP: Note that after saving you can't access the secret key anymore, this is one of Tower's features: you can use credentials for running jobs, but you can't get them!
 
 === Automation System with Ansible Tower
 
