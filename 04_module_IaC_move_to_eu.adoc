@@ -1,16 +1,9 @@
 = IaCStart - Scale the frontend to cope with the load
 
+Due to a new regulation requirement it is not longer allowed to run the shop in the US. 
 
+Therefore, you need to delete the resources in the US and to deploy the shop in the AWS region eu-central-1.
 
-Warum Playbook anpassen -> Webserver muss HA sein - Götz
-zweiter Webserver
-LoadBalencer (Elastic IP!)
-neue Version für mehr Umsatz (Anpassen von Playbooks) - Martin
-// Monitoring muss die neue Version erkennen
+HINT: Some of the resources and IDs are region bounded.
 
-Modul 4 
-Regionsumzug - Christian
-Umsatz in USA zählt nicht mehr
-neue Region in DE deployen- Christian
-alte Region löschen- Christian
-negativ Count? - Martin
+From this second on, the revenue from the shop will not count until the shop is available with an EU IP-Address and your user are informed about the move. 

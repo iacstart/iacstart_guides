@@ -11,7 +11,7 @@ Without further ado let's simply get started, you'll get more instructions on yo
 TIP: Remember to have fun!
 
 
-== Description of the target enviroment
+== Description of the target environment
 
 You will need to build to virtual servers. 
 Here are the specifications of the servers:
@@ -29,16 +29,16 @@ Here are the specifications of the servers:
 * Instance Size: t2.micro
 * Disk Size: 8GB
 * AMI Image: Amazon Linux 2 AMI (HVM), SSD Volume Type
-* Network Acess: SSH from any source, mySQL from web servers
+* Network Access: SSH from any source, mySQL from web servers
 * Tag: Managed:Manual
 
 === Additional steps: 
 
-To run the web appliction some packages and configuration are need. 
+To run the web application some packages and configuration are need. 
 
-* Additional Software: git, rubb, mariadb developer libraries, build essentials and policykit-1
+* Additional Software: git, ruby, mariadb developer libraries, build essentials and policykit-1
 * gem package: bundler
-* create the folder "/opt/iac_shop" and do clone the git repoitory *{git}*
+* create the folder "/opt/iac_shop" and do clone the git repository *{git}*
 * install the GEM file, which is in the installation folder
 * copy the *webshop.service* file from the installation folder to */etc/systemd/system/webshop.service*
 
@@ -53,9 +53,9 @@ bundle exec rake db:setup
 
 == Cloud Environment on AWS 
 
-Everything you'll do during this game is about deploying cloud-based infrastructures. We'll use Amazon Webservices which can be accessed using APIs or in a web console. 
+Everything you'll do during this game is about deploying cloud-based infrastructures. We'll use Amazon Web Services which can be accessed using APIs or in a web console. 
 
-=== Access the Amazon Webservices Console and create your user to work with
+=== Access the Amazon Web Services Console and create your user to work with
 
 * Open the AWS console https://console.aws.amazon.com/
 * Log-in with the provided Credentials
@@ -75,8 +75,8 @@ To do so, click on the "Download .csv" button and store the file on your machine
 * Verify that you are connected to the *USA Ost Nord-Virginia us-east-1* Region in the top right corner. If not, change to that region.
 
 === Create a VPC
-The VPC is your virtual datacenter, where all the ressources will be located. 
-The VPC boudary is the network. 
+The VPC is your virtual data center, where all the resources will be located. 
+The VPC boundary is the network. 
 Please us the following CIDR for your VPC 10.4.0.0/20
 
 === Create a Subnet within the VPC

@@ -6,7 +6,7 @@ By now you should have access to your
 * Github account
 * Ansible Tower web interface
 
-And the follwoing tasks should have been completed:
+And the following tasks should have been completed:
 
 * AWS user and access key/SSH key have been created
 * Github repos with IaC Playbooks and application code have been cloned into your team account
@@ -50,7 +50,7 @@ The Playbook named `create_vpc_complete.yml` already exists in your Github repos
 ** *Inventory*: localhost
 * The Github repo
 ** *Project*: iacstart
-* Choos the Playbook from the repo
+* Choose the Playbook from the repo
 ** *Playbook*: create_vpc_complete.yml
 * What credentials to use
 ** *Credentials*: AWS
@@ -87,7 +87,7 @@ You have:
 
 You could now run the Workflow (it would of course only execute the first Playbook) but something is missing: Have a look at the `create_vpc_complete.yml` Playbook in Github. In the Ansible-code are a good number of *{{ ... }}* constructs. These are variables which have to be filled with content, making the Playbook more versatile without always changing the code itself.
 
-There are multiple ways to supply variable content to a Playbook/Job Template, in out case put it into the Worflow definition in Tower:
+There are multiple ways to supply variable content to a Playbook/Job Template, in out case put it into the Workflow definition in Tower:
 
 * Open the Workflow configuration in Tower
 * Find the text field *EXTRA VARIABLES*

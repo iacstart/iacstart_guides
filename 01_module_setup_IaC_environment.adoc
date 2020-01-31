@@ -58,7 +58,7 @@ With the credentials in place, you'll run a first simple job to see if everythin
 
 TIP: Ansible content is mainly the Playbooks, which are the "recipes" which describe what steps should be automated in your IT environment. Besides Ansible automation content can be variable files, files, file templates and more. But one step after the other.
 
-So to check everything works and to walk you through the process of setting up and running Anibsle automation against AWS do the following in the Tower web UI:
+So to check everything works and to walk you through the process of setting up and running Ansible automation against AWS do the following in the Tower web UI:
 
 * Create a new *Project*. Projects in Tower are pointers to version control systems holding the needed files, in this case, your Github repository.
 
