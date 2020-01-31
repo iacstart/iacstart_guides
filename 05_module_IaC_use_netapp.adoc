@@ -1,7 +1,15 @@
+:nfs-share: 172.31.255.4:/adamant-angry-soffi
+
 = IaCStart - Scale the frontend to cope with the load
 
+The marking department has changed the process to ship new images for the web site. At the moment the images are part of the application deployment, which means, that every image change involves an application deployment. 
 
-Module 5
-Netapp - Christian (Thomas Vitt)
-Bilder werden über die NetApp bereit gestellt - Martin & Christian
-alten Storage durch NetApp ersetzen (ersetzen oder erweitern)
+The images will be provided on a central NFS Storage, which will utilize the Cloud Volume Services from NetApp on AWS.
+
+The CVS is available from the central AWS team. You will see new shared Subnet in your AWS console which allows you to connect to the CVS.
+
+The NFS share name is {nfs-share}
+
+To use the new images you need to mount the NFS share and you need to deploy the new version of the application.
+
+Only the revenue of the new application version will count against your overall result. 
