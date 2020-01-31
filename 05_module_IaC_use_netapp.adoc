@@ -1,0 +1,7 @@
+= IaCStart - Scale the frontend to cope with the load
+
+
+Module 5
+Netapp - Christian (Thomas Vitt)
+Bilder werden über die NetApp bereit gestellt - Martin & Christian
+alten Storage durch NetApp ersetzen (ersetzen oder erweitern)

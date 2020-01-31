@@ -1,0 +1,16 @@
+= IaCStart - Scale the frontend to cope with the load
+
+
+
+Warum Playbook anpassen -> Webserver muss HA sein - Götz
+zweiter Webserver
+LoadBalencer (Elastic IP!)
+neue Version für mehr Umsatz (Anpassen von Playbooks) - Martin
+// Monitoring muss die neue Version erkennen
+
+Modul 4 
+Regionsumzug - Christian
+Umsatz in USA zählt nicht mehr
+neue Region in DE deployen- Christian
+alte Region löschen- Christian
+negativ Count? - Martin

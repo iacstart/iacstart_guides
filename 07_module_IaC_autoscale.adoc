@@ -1,0 +1,5 @@
+= IaCStart - Scale the frontend to cope with the load
+
+Modul 7 (optional) - tbd
+Autoscale
+
