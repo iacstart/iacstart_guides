@@ -38,6 +38,7 @@ To get access to Tower's web interface you just have to fire up a browser. The U
 By now your Tower is pretty empty, have a look around anyway.
 
 == Task 1: Configure Ansible Tower for AWS
+
 === Create Cloud Access Credentials
 
 The first step is to configure Ansible Tower to talk to AWS using your account credentials. This is straight forward, you have to use the AWS access key, which you've downloaded during the AWS user setup and configure it in Tower as a cloud credential. 
@@ -51,6 +52,18 @@ To do so work through these steps:
 ** Now the fields *ACCESS KEY* and *SECRET KEY* open, enter the respective keys. The keys can be found in the downloaded CSV file from AWS. 
 ** Save the credentials
 
+=== SSH Credentials
+
+In the next steps, you need to add the ssh private key to the Ansible Tower, so that you can use this key during the playbooks.
+
+* Bring up the Tower web interface and configure a new cloud credential:
+** Select "Credentials" in the left menu
+** Add a new Cloud Credential by clicking the "+" button
+** Fill in the *NAME* field with *AWS SSH* 
+** In the *CREDENTIAL TYPE* Field, click the magnifying glass and select *Machine* as type
+** Open the *ssh-access.pem* file, which you have downloaded during module 0, with a text editor and copy the whole content.
+** Paste the content into the *SSH PRIVATE KEY* field. 
+** Save the credentials
 
 === Add the Github Repository as Tower Project
 
@@ -132,20 +145,6 @@ For the fun of it go to your AWS web console to make sure the EIP is there!
 * Write down the Public IPv4 address, which was created by the playbook before.
 
 WARNING: Communicate the IP address together with the team name to the facilitators. aka. *MR. DNS*
-
-pem" file with the private key of the key pair.
-
-In the next steps, you need to add the key to the Ansible Tower, so that you can use this key during the playbooks.
-
-* Bring up the Tower web interface and configure a new cloud credential:
-** Select "Credentials" in the left menu
-** Add a new Cloud Credential by clicking the "+" button
-** Fill in the *NAME* field with *AWS SSH* 
-** In the *CREDENTIAL TYPE* Field, click the magnifying glass and select *Machine* as type
-** Open the *ssh-access.pem* file with a text editor and copy the whole content.
-** Paste the content into the *SSH PRIVATE KEY* field. 
-** Save the credentials
-
 
 == Review what you have done so far.
 
