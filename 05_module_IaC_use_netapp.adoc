@@ -1,4 +1,4 @@
-:nfs-share: 172.31.255.4:/adamant-angry-soffi
+:nfs-share: 10.10.10.4:/elated-fervent-engelbart
 
 = IaCStart - Scale the frontend to cope with the load
 
@@ -6,7 +6,10 @@ The marking department has changed the process to ship new images for the web si
 
 The images will be provided on a central NFS Storage, which will utilize the Cloud Volume Services from NetApp on AWS.
 
-The CVS is available from the central AWS team. You will see new shared Subnet in your AWS console which allows you to connect to the CVS.
+The CVS is available from the central AWS team. Due to the architecture of this game environment, you need to utilize a other VPC and Subnet, which we have already deployed to your account. 
+
+So you need to destroy your current environment and redeploy the whole infrastructure into the given Subnet. You can identify the target Subnet in the VPC console with the CIDR, which starts with 10.128.
+
 
 The NFS share name is {nfs-share}
 
