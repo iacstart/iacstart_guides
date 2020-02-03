@@ -96,8 +96,8 @@ There are multiple ways to supply variable content to a Playbook/Job Template, i
 ----
 ---
 vpc: "iacstart"
-vpc_cidr: "10.0.0.0/16"
-subnet_cidr: "10.0.1.0/24"
+vpc_cidr: "10.101.0.0/16"
+subnet_cidr: "10.101.1.0/24"
 state: "present"
 region: "us-east-1"
 ----
@@ -163,7 +163,7 @@ Now your are ready to extend your workflow by adding the Playbook for creating i
 ** Instance Type 
 ** AMI ID you found for the CentOS AMI
 ** The name of your SSH key
-* by adding the following to the *EXTRA VARIABLES*:
+* by adding the following to the *EXTRA VARIABLES* of *the Workflow*:
 
 ----
 instance_type: <instance type>
