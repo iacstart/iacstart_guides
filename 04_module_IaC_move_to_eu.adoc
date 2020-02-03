@@ -1,4 +1,4 @@
-= IaCStart - Scale the frontend to cope with the load
+= IaCStart - Let's move to good old europe
 
 Due to a new regulation requirement it is not longer allowed to run the shop in the US. 
 
