@@ -173,7 +173,32 @@ ssh_key: "<SSH Key>"
 
 * Extend your workflow using the *WORKFLOW VISUALIZER* to add a new node after the node creating the VPC. Configure the node to run the *iac_create_instance* Job Template.
 
-*Go and execute the Workflow Template!*
+*Go and execute the Workflow Template* by clicking the Rocket item in the Template list an Ansible Tower.
+
+=== Check the State of your Nation
+
+If you go to the AWS web console now (set to the correct region) you should see two new instances coming up in the EC2 Service dashboard. When the icons in the *Instance State* and *Status Checks* columns change to green your instances are happily up and running. You could now go and connect to them e.g. by SSH.
+
+=== Installing the Application
+
+But just having two VMs running is not providing lots of business value. So after creating:
+
+* a VPC (your very own cloud datacenter) and network infrastructure
+* the instances (your VMs)
+
+you'll have do add Playbooks for application installation and configuration to the workflow.
+
+WARNING: *But Wait*: Before we can go from deploying instances to installing something inside of them, we have to get the IP addresses and make them known to Ansible Tower so Ansible cn talk to them.
+
+==== Setting up a Dynamic Inventory
+
+Ansible can query Cloud Providers for instances and their IP addresses to get an inventory of servers it can talk to in subsequent Playbook (Job Template) runs. So this is something you have to do now.
+
+In your Ansible Tower web UI
+
+
+
+
 
 
 
