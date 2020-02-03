@@ -85,7 +85,7 @@ You have:
 
 === Parameterize and Run the Workflow
 
-You could now run the Workflow (it would of course only execute the first Playbook) but something is missing: Have a look at the `create_vpc_complete.yml` Playbook in Github. In the Ansible-code are a good number of *{{ ... }}* constructs. These are variables which have to be filled with content, making the Playbook more versatile without always changing the code itself.
+You could now run the Workflow (it would of course only execute the first Playbook) but something is missing: Have a look at the `create_vpc_complete.yml` Playbook in Github. In the Ansible-code are a good number of *{{ ... }}* constructs. These are variables which have to be filled with content, making the Playbook more versatile without always having ti change the code itself.
 
 There are multiple ways to supply variable content to a Playbook/Job Template, in out case put it into the Workflow definition in Tower:
 
@@ -96,10 +96,10 @@ There are multiple ways to supply variable content to a Playbook/Job Template, i
 ----
 ---
 vpc: "iacstart"
-vpc_cidr: "10.0.0.0/16"
-subnet_cidr: "10.0.1.0/24"
+vpc_cidr: "10.101.0.0/16"
+subnet_cidr: "10.101.1.0/24"
 state: "present"
-region: "eu-central-1"
+region: "us-east-1"
 ----
 
 WARING: Make sure to keep the *---* in place as they are! This tells Tower the format is YAML.
@@ -115,14 +115,27 @@ Your Workflow should have created a new VPC, check in the AWS console. Now try t
 
 === Create AWS Instances in your VPC
 
-The next step in your Infrastructure-as-Code setup is to deploy two cloud instances (Virtual Machines) to run your application. In the cloud you usually don't install operating systems from scratch, AWS (and other cloud providers) come with a large number of pre-made images you can use to start your instances. In AWS these are called "Amazon Machine Images (AMI)".
+The initial version of your application will consist of one webserver and one database server. The next step in your Infrastructure-as-Code setup is to deploy two cloud instances (Virtual Machines) to run your application. In the cloud you usually don't install operating systems from scratch, AWS (and other cloud providers) come with a large number of pre-made images you can use to start your instances. In AWS these are called "Amazon Machine Images (AMI)".
 
-A Playbook to start instances in AWS already exists in your Github repo, but you need some information to pass as parameters:
+A Playbook to deploy instances in AWS already exists in your Github repo, but you need some information to pass as parameters:
 
+* The *Instance Type*, defining the sizing of the VM (Memory, CPUs etc)
 * An *AMI ID*, basically what image/operating system to use.
 * What *SSH Key* to inject into the instance, so Ansible can later on connect to it using SSH. You already created this key during the AWS setup steps.
 
-==== Find the AMI ID
+==== Find the Instance Size
+
+WARNING: Before doing anything in the AWS web console, make sure you are in Region *US East (N. Virginia)*, check the drop-down in the upper right.
+
+First find a fitting instance size: Your VM should have *2 vCPUs and 2048 MiB Memory*.
+
+WARNING: Using another size will result in points reduction (not to mention AWS costs... ;-)
+
+In your AWS web console open *Services -> EC2*. In the left menu bar choose *Instance Types*. You will get a list of all available instance sizes for this region, use the filter to find the one providing the neede resources, but not more. There should only be two instance types which combine the right vCPU count and Memory size. 
+
+Take note of the instance type.
+
+==== Find the Amazon Machine Image (AMI) ID 
 
 There are multiple ways to find an AMI suitable for your application. In our scenario you are going to  use *CentOS 7* in the latest release as operating system. So you have to:
 
@@ -136,8 +149,8 @@ Finding the proper AMI ID can be tricky, here take this road:
 * On the overview page click *CentOS 7 (x86_64) - with Updates HVM*
 * You'll now get lots of information about the image, click the *Continue to Subscribe* button to the upper right.
 * Now click the *Continue to Configuration* button (bear with me, nearly there...)
-* AMI IDs are region-specific, on the next page choose *EU (Frankfurt)* as *Region* and, lo and behold, you'll get the AMI ID to the right.
-* Copy it
+* AMI IDs are region-specific, on the next page choose *US East (N. Virginia)* as *Region* and, lo and behold, you'll get the AMI ID to the right.
+* Copy the ID
 
 NOTE: Even if this feels tiresome for now, remember you would have to go through these steps only once, after your automation is finished you can just execute it again and again.
 
@@ -146,16 +159,46 @@ NOTE: Even if this feels tiresome for now, remember you would have to go through
 Now your are ready to extend your workflow by adding the Playbook for creating instances. You have done the required steps already when integrating the VPC creation into the workflow. Here is what you have to do:
 
 * Create a Job Template named *iac_create_instance* pointing to the `create_instance.yml` Playbook.
-* Define the variables needed by the Playbook (fill in the AMI ID you found for the CentOS AMI and the name of your SSH key) by adding the following to the *EXTRA VARIABLES*:
+* Define the variables needed by the Playbook:
+** Instance Type 
+** AMI ID you found for the CentOS AMI
+** The name of your SSH key
+* by adding the following to the *EXTRA VARIABLES* of *the Workflow*:
 
 ----
+instance_type: <instance type>
 ami_id: "<AMI ID>>"
 ssh_key: "<SSH Key>"
 ----
 
 * Extend your workflow using the *WORKFLOW VISUALIZER* to add a new node after the node creating the VPC. Configure the node to run the *iac_create_instance* Job Template.
 
-*Go and execute the Workflow Template!*
+*Go and execute the Workflow Template* by clicking the Rocket item in the Template list an Ansible Tower.
+
+=== Check the State of your Nation
+
+If you go to the AWS web console now (set to the correct region) you should see two new instances coming up in the EC2 Service dashboard. When the icons in the *Instance State* and *Status Checks* columns change to green your instances are happily up and running. You could now go and connect to them e.g. by SSH.
+
+=== Installing the Application
+
+But just having two VMs running is not providing lots of business value. So after creating:
+
+* a VPC (your very own cloud datacenter) and network infrastructure
+* the instances (your VMs)
+
+you'll have do add Playbooks for application installation and configuration to the workflow.
+
+WARNING: *But Wait*: Before we can go from deploying instances to installing something inside of them, we have to get the IP addresses and make them known to Ansible Tower so Ansible cn talk to them.
+
+==== Setting up a Dynamic Inventory
+
+Ansible can query Cloud Providers for instances and their IP addresses to get an inventory of servers it can talk to in subsequent Playbook (Job Template) runs. So this is something you have to do now.
+
+In your Ansible Tower web UI
+
+
+
+
 
 
 
