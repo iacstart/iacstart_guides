@@ -16,7 +16,7 @@ WARNING: If not please don't proceed and ask for assistance!
 
 == Using Ansible Tower Workflows
 
-Workflows are a feature that Tower adds to Ansible Automation. You basically link separate Playbooks (which could have been authored by different people) into one "Meta-Playbook".
+Workflows are a feature that Tower adds to Ansible Automation. You basically link separate Job Templates (Playbooks) (which could have been authored by different people) into one "Meta-Playbook".
 
 We'll use Workflows in our scenario, just remember they are part of Tower's feature set and are not part of Ansible Engine/command line. So let's get started, you have a repository filled with Playbooks you need to integrate using Tower.
 
@@ -192,26 +192,95 @@ WARNING: *But Wait*: Before we can go from deploying instances to installing som
 
 ==== Setting up a Dynamic Inventory
 
-Ansible can query Cloud Providers for instances and their IP addresses to get an inventory of servers it can talk to in subsequent Playbook (Job Template) runs. So this is something you have to do now.
+Ansible can query Cloud Providers for instances and their IP addresses to get an inventory of servers it can talk to in subsequent Job Template runs. So this is something you have to do now first.
 
-In your Ansible Tower web UI
+In your Ansible Tower web UI:
 
+* Got to *Resources-> Inventories*
+* Click the green *+* icon and choose *Inventory*
+* Create a new Inventory:
+** *NAME*: iacstart
+** Click *SAVE*
+* Now add a source to the Inventory:
+** Click the *SOURCES* button
+** Click the green *+* button
+** *NAME*: iacstartaws
+** *SOURCE*: Amazon EC2
+* For *SOURCE DETAILS*
+** *CREDENTIALS*: AWS
+** *REGION*: US East (Northern Virginia)
+** *UPDATE OPTIONS*: tick *OVERWRITE*
+** *INSTANCE FILTERS*: tag:Name=iacstart*
 
+TIP: The last setting is for making sure we only return instance which are named `iacstart<something>`. Just to make sure we don't return any other instances which might live in the same VPC/Subnet. 
 
+Now give the new dynamic inventory a try:
 
+* Go to the *SOURCES* view of the new inventory
+* Click the circular arrow icon to start a sync
+* After the sync has finished, check the *HOSTS* view your two hosts should show up there with there addresses.
 
+==== Adding the Inventory Sync to the worksflow
 
+Now that the inventory sync is working, you can add it to the Workflow after the instance deploy step.
 
+* Open the Workflow by clicking the name from the template list
+* Now open the *WORKFLOW VISUALIZER*
+* Click the green *+* icon on the iac_create_instance node to open a new node
+* Configure the node to be an *Inventory Sync* node
+* Choose the inventory source to use
+* Click *SELECT* and *SAVE*
 
+TIP: Feel free to run the whole workflow again. Every step should be idempotent and should not add or change anything defined in your Job Templates.
 
+==== Add the Application Deployment Job 
 
+So far you have a Workflow that:
 
+* Creates a VPC
+* Deploys two instances
+* Makes the new instances known to Ansible for further tasks
 
+Your Playbook repository contains a Playbook that deploys a simple two-tier (webserver and database) application to your instances. You have done this already, so use your new automation skills to:
 
+* Create a new Job Template calling the app deployment Playbook
 
+TIP: You can copy the instance deploy Playbook and change the settings.
 
+* Add this Job Template as a new node (step) to your Workflow
 
+=== Run the complete Workflow
 
+It's time to test the complete workflow. You could either delete the objects you have created so far in test runs:
 
+* Go to the AWS web console
+* Terminate the instances in the EC2 Service view
+* Delete the `iacstart` VPC in the VPC Service view
 
+Or just run the workflow again. Your decision.
 
+TIP: Infrastructure as Code done right is idempotent
+
+To test your deployment, get the IP address of your webserver from the inventory in Ansible Tower or from the AWS console in the EC2 instance details. Then just open it in your browser.
+
+=== Challenge: Use Elastic IP
+
+Until now your instances have an IP address reachable from the Internet, but this address is not static, meaning it'll change after reboots. Not good for a web shop. If you remember you added the Playbook `allocate_eip.yml` as the first test of your setup and allocated an Elastic (means fixed in AWS lingo) IP to your account.
+
+Now you have to associate the IP with your webserver. This is for you to do on your own. A couple of hints:
+
+* Use the Github.com web UI to create the new Playbook `associate_eip.yml`. Here is a example task. The example IP and device_id have to be replaced by your values, make them configurable through variables:
+
+----
+- name: associate an elastic IP with an instance
+  ec2_eip:
+    device_id: i-1212f003
+    ip: 93.184.216.119
+    allow_reassociation: yes
+----
+
+TIP: Remember variable are done like this in Ansible Playbooks: `"{{...}}"`
+
+* Use the `allocate_eip.yml` Playbook as a template
+* Make the values configurable by two variables (to be put in the *EXTRA VARIABES* field of the Tower Job Template)
+* Create a Job Template in Ansible Tower that uses the new Playbook.
