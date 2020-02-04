@@ -20,7 +20,7 @@ Here are the specifications of the servers:
 
 * Instance Size: t2.micro
 * Disk Size: 8GB
-* AMI Image: Amazon Linux 2 AMI (HVM), SSD Volume Type
+* AMI Image: Red Hat Enterprise Linux 8 (HVM), SSD Volume Type
 * Network Access: SSH, HTTP, and HTTPS from any source
 * Tag: Managed:Manual
 
@@ -28,8 +28,8 @@ Here are the specifications of the servers:
 
 * Instance Size: t2.micro
 * Disk Size: 8GB
-* AMI Image: Amazon Linux 2 AMI (HVM), SSD Volume Type
-* Network Access: SSH from any source, mySQL from web servers
+* AMI Image: Red Hat Enterprise Linux 8 (HVM), SSD Volume Type
+* Network Access: SSH from any source, mongodb (27017/tcp) from web servers
 * Tag: Managed:Manual
 
 
@@ -76,7 +76,7 @@ Within the VPC, you need to create Subnets to connect your systems later on.
 
 === Create the ssh key pair for the access to the linus servers
 
-* To log-in into new provisioned servers, you need to provide a public ssh-key during the deployment where you have the privte key.
+* To log-in into new provisioned servers, you need to provide a public ssh-key during the deployment where you have the private key.
 * This key pair can be created in the AWS console in the EC2 dashboard where you can select "key pairs" and than "Create key pair".
 * Provide a name, so that you can identify the key during the later use.
 * Select pem as file format as this format is important for the later use in the game
@@ -88,28 +88,77 @@ WARNING: This private key file will always be needed to access a server on AWS a
 
 * Open the EC2 console and launch the two server instances as described above.
 
+=== Configure the database server
+
+* Install mongodb
+
+Add the mongodb repository to the system. */etc/yum.repos.d/mongodb-org-4.2.repo*
+
+----
+[mongodb-org-4.2]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.2/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
+----
+
+sudo yum install -y mongodb-org
+
+* Configure mongodb to bind to any IP
+
+sudo vi /etc/mongod.conf
+
+Change bindIP to *0.0.0.0*
+
+* Start mongodb
+
+sudo systemctl start mongod
 
 === Configure the web server
 
 To run the web application some packages and configuration are need. 
 
-* Additional Software: git, ruby 2.6, ruby-devel, mariadb developer libraries, sqlite-devel,  build essentials (gcc gcc-c++ kernel-devel make) and policykit-1
-* gem package: bundler
-* create the folder "/opt/iac_shop" and do clone the git repository *{git}*
-* install the GEM file, which is in the installation folder
-* copy the *webshop.service* file from the installation folder to */etc/systemd/system/webshop.service*
-
-
-To setup the database with the content, run the following commands on the web server after the database server is created. 
-
+* Install git
 
 ----
-sudo gem pristine sqlite3 --version 1.4.2
-sudo gem pristine mysql2 --version 0.5.3
-bundle exec rake db:create
-bundle exec rake db:migrate
-bundle exec rake db:setup
+sudo yum install git
 ----
+
+* Clone repo
+
+----
+cd /opt
+sudo git clone https://github.com/iacstart/nodejs_sample.git
+----
+
+* Install nodejs
+
+----
+sudo yum install -y gcc-c++ make
+curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash -
+sudo yum install -y nodejs
+----
+
+* Install npm packages
+
+----
+sudo npm install express morgan object-assign ejs mongodb
+----
+
+* Configure Application
+
+Open the file /opt/nodejs_sample/server.js file. 
+Change the database server IP address to the address of your database server.
+
+* Start the app
+
+Test that the app is running from the command line *sudo npm start*
+Open the URL of the server to check the web site
+
+* BONUS
+
+Ensure that the web server application is running after with as deamon with a enabled service. 
 
 
 == Review what you have done so far.
