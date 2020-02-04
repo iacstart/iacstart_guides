@@ -65,12 +65,13 @@ To do so, click on the "Download .csv" button and store the file on your machine
 === Create a Subnet within the VPC
 
 Within the VPC, you need to create Subnets to connect your systems later on. 
+
 * Select Subnets in the VPC Console and create one subnet in the new VPC with the CIDR 10.4.0.0/24
-* After you have create, change the auto-assign IP settings to enable the assignment of public IP addresses. 
+* After you have created the subnet, change the "auto-assign IP settings" to enable the assignment of public IP addresses. 
 
 === Internet Gateway and and routing
 
-* To enable the access from the internet to the systems in this Subnet you also need to create a internet gateway which needs to be connected to the new VPC.
+* To enable the access from the internet to the systems in this subnet you also need to create a internet gateway which needs to be connected to the new VPC.
 * After you have created the Gateway to the internet, you also need to configure the default route (CIDR 0.0.0.0/0) in the routing table of the subnet to use the gateway. 
 
 === Create the ssh key pair for the access to the linus servers
@@ -92,7 +93,7 @@ WARNING: This private key file will always be needed to access a server on AWS a
 
 To run the web application some packages and configuration are need. 
 
-* Additional Software: git, ruby, mariadb developer libraries, build essentials and policykit-1
+* Additional Software: git, ruby 2.6, ruby-devel, mariadb developer libraries, sqlite-devel,  build essentials (gcc gcc-c++ kernel-devel make) and policykit-1
 * gem package: bundler
 * create the folder "/opt/iac_shop" and do clone the git repository *{git}*
 * install the GEM file, which is in the installation folder
@@ -101,7 +102,10 @@ To run the web application some packages and configuration are need.
 
 To setup the database with the content, run the following commands on the web server after the database server is created. 
 
+
 ----
+sudo gem pristine sqlite3 --version 1.4.2
+sudo gem pristine mysql2 --version 0.5.3
 bundle exec rake db:create
 bundle exec rake db:migrate
 bundle exec rake db:setup
