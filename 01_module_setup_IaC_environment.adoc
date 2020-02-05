@@ -98,7 +98,10 @@ WARNING: Make sure to use the *https* URL
 *** Inventory "Demo Inventory"
 *** Project "IaC Start"
 *** Playbook "allocate_eip.yml"
-*** Credentials "AWS" (Type: "Amazon Web Services" )
+*** Credentials "AWS" (Type: "Amazon Web Services")
+*** For "SCM UPDATE OPTIONS" tick "Clean" and "Update Revision on Launch"
+
+* Click *SAVE*
 
 
 So now you have configured Tower to run one of the Playbooks from your Github repo. Before starting it, have a look at the Playbook to get an idea of how it looks like and to get an idea of what it might do.
