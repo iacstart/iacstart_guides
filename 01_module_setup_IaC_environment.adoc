@@ -48,7 +48,7 @@ To do so work through these steps:
 ** Select "Credentials" in the left menu
 ** Add a new Cloud Credential by clicking the "+" button
 ** Fill in the *NAME* field with *AWS* 
-** In the *CREDENTIAL TYPE* Field, click the magnifying glass and select *Amazon Web Services*"* as type
+** In the *CREDENTIAL TYPE* Field, click the magnifying glass and select *Amazon Web Services* as type
 ** Now the fields *ACCESS KEY* and *SECRET KEY* open, enter the respective keys. The keys can be found in the downloaded CSV file from AWS. 
 ** Save the credentials
 
