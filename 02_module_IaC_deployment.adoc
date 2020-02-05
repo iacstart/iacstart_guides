@@ -47,13 +47,13 @@ The Playbook named `create_vpc_complete.yml` already exists in your Github repos
 * Name it
 ** *Name*: *iac_create_vpc*
 * What hosts to run on 
-** *Inventory*: localhost
+** *Inventory*: Demo Inventory
 * The Github repo
 ** *Project*: iacstart
 * Choose the Playbook from the repo
 ** *Playbook*: create_vpc_complete.yml
 * What credentials to use
-** *Credentials*: AWS
+** *Credentials* (Type *Amazon Web Services*): AWS
 * And finally click *SAVE*
 
 WARNING: While you get more familiar with Ansible Tower we'll use less and less verbose instructions in this guide.
@@ -74,7 +74,7 @@ Add the first Node by clicking *START*, an empty node gets added, configure it i
 * Click *SAVE*
 
 [TIP] 
-.What have you done so far? 
+.What have you done? 
 ====
 You have:
 
@@ -85,9 +85,9 @@ You have:
 
 === Parameterize and Run the Workflow
 
-You could now run the Workflow (it would of course only execute the first Playbook) but something is missing: Have a look at the `create_vpc_complete.yml` Playbook in Github. In the Ansible-code are a good number of *{{ ... }}* constructs. These are variables which have to be filled with content, making the Playbook more versatile without always having ti change the code itself.
+You could now run the Workflow (it would of course only execute the first Playbook) but something is missing: Have a look at the `create_vpc_complete.yml` Playbook in Github. In the Ansible-code are a good number of *{{ ... }}* constructs. These are variables which have to be filled with content, making the Playbook more versatile without always having to change the code itself.
 
-There are multiple ways to supply variable content to a Playbook/Job Template, in out case put it into the Workflow definition in Tower:
+There are multiple ways to supply variable content to a Job Template (Playbook), in our case put it into the Workflow definition in Tower:
 
 * Open the Workflow configuration in Tower
 * Find the text field *EXTRA VARIABLES*
