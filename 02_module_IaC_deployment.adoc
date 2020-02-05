@@ -223,7 +223,7 @@ Now give the new dynamic inventory a try:
 * Click the circular arrow icon to start a sync
 * After the sync has finished, check the *HOSTS* view your two hosts should show up there with there addresses.
 
-==== Adding the Inventory Sync to the worksflow
+==== Adding the Inventory Sync to the Workflow
 
 Now that the inventory sync is working, you can add it to the Workflow after the instance deploy step.
 
@@ -244,13 +244,23 @@ So far you have a Workflow that:
 * Deploys two instances
 * Makes the new instances known to Ansible for further tasks
 
-Your Playbook repository contains a Playbook that deploys a simple two-tier (webserver and database) application to your instances. You have done this already, so use your new automation skills to:
+Your Playbook repository contains Playbooks that deploy a simple two-tier (webserver and database) application to your instances. You have configured Job Templates and added them to the Workflow already, so use your new automation skills to:
 
-* Create a new Job Template calling the app deployment Playbook
+* Create a Job Template for the database deployment:
+** Name it *iacstart_install_database* that uses the *install_database.yml* Playbook.
+** Make it use the inventory *iacstart*
+** For credentials use *AWS SSH*
+** Make sure it only runs on the database instance, limit the scope by setting *LIMIT* to `tag_Name_iacstart_db`.
 
-TIP: You can copy the instance deploy Playbook and change the settings.
+* Create a Job Template for the final application deployment:
+** Name it *iacstart_install_application* that uses the *install_sinatra.yml* Playbook.
+** Make it use the inventory *iacstart*
+** For credentials use *AWS SSH*
+** Make sure it only runs on the database instance, limit the scope by setting *LIMIT* to `tag_Name_iacstart_web`.
 
-* Add this Job Template as a new node (step) to your Workflow
+TIP: You can copy the instance deploy Playbook and adapt the settings.
+
+* Add the two new Job Template as new nodes to your Workflow, first the database installation and then the application installation Playbook.
 
 === Run the complete Workflow
 
