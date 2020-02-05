@@ -143,7 +143,7 @@ For the fun of it go to your AWS web console to make sure the EIP is there!
 * Open the AWS console https://console.aws.amazon.com/
 * Log-in with the provided Credentials
 * Open the EC2 Console within the service menu
-* Verify that you are connected to the *Europa (Frankfurt)eu-central-1* Region in the top right corner. If not, change to that region.
+* Verify that you are connected to the *USA Ost (Nord-Virginia) us-east-1* Region in the top right corner. If not, change to that region.
 * Click on the "Elastic IPs" in the middle of the screen
 * Write down the Public IPv4 address, which was created by the playbook before.
 
