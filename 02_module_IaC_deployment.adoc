@@ -29,14 +29,16 @@ As a starting point create the Workflow without running any Playbooks, we'll add
 * In the upper right click the green *+* icon and choose *Workflow Template*.
 * Enter a name for the Workflow: *iacstart* and click the *SAVE* button.
 
-The visual workflow designer opens, hit the *CLOSE* button it for now. Now let's add the first Playbook to have Ansible actually do something. To use an Ansible Playbook as part of a workflow you have to:
+The visual workflow designer opens, hit the *CLOSE* button it for now. Your Workflow is now ready to be filled with Job Templates (Playbooks). To use an Ansible Playbook as part of a workflow you have to:
 
 * Create a Job Template using a Playbook.
 * Add the Job Template to the Workflow Template.
 
+And that's what you are going to do now.
+
 == Create an AWS *Virtual Private Cloud* (VPC)
 
-As already discussed during the introduction the first resource you need in AWS (and other clouds) is a VPC to separate your infrastructure components from other stuff probably running in your cloud environment.
+As already discussed during the introduction the first resource you need in AWS (and other clouds) is a VPC to separate your infrastructure components from other stuff probably running in your cloud environment. So let's start by autmomating the creation of the VPC.
 
 The Playbook named `create_vpc_complete.yml` already exists in your Github repository. First create a Job Template to make it usable in Tower:
 
