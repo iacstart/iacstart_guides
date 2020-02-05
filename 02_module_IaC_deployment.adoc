@@ -282,5 +282,5 @@ Now you have to associate the IP with your webserver. This is for you to do on y
 TIP: Remember variable are done like this in Ansible Playbooks: `"{{...}}"`
 
 * Use the `allocate_eip.yml` Playbook as a template
-* Make the values configurable by two variables (to be put in the *EXTRA VARIABES* field of the Tower Job Template)
+* Make the values configurable by two variables (to be put in the *EXTRA VARIABLES* field of the Tower Job Template)
 * Create a Job Template in Ansible Tower that uses the new Playbook.
