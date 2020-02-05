@@ -1,4 +1,4 @@
-:git: https://github.com/iacstart/iac_shop.git 
+:git: https://github.com/iacstart/nodejs_sample.git 
 
 = IaCStart - Let's deploy your first app on AWS
 
@@ -19,7 +19,7 @@ Here are the specifications of the servers:
 === Web server:
 
 * Instance Size: t2.micro
-* Disk Size: 8GB
+* Disk Size: 10GB
 * AMI Image: Red Hat Enterprise Linux 8 (HVM), SSD Volume Type
 * Network Access: SSH, HTTP, and HTTPS from any source
 * Tag: Managed:Manual
@@ -27,7 +27,7 @@ Here are the specifications of the servers:
 === Database server:
 
 * Instance Size: t2.micro
-* Disk Size: 8GB
+* Disk Size: 10GB
 * AMI Image: Red Hat Enterprise Linux 8 (HVM), SSD Volume Type
 * Network Access: SSH from any source, mongodb (27017/tcp) from web servers
 * Tag: Managed:Manual
@@ -35,13 +35,13 @@ Here are the specifications of the servers:
 
 == Cloud Environment on AWS 
 
-Everything you'll do during this game is about deploying cloud-based infrastructures. We'll use Amazon Web Services which can be accessed using APIs or in a web console. 
+Everything you'll do during this game is about deploying cloud-based infrastructures. We'll use Amazon Web Services which can be accessed using APIs or with a web console. 
 
 === Access the Amazon Web Services Console and create your user to work with
 
 * Open the AWS console https://console.aws.amazon.com/
 * Log-in with the provided Credentials
-* Create new User to work with
+* Create s new user to work with
 ** Open the IAM-Console (Service Menu on the top)
 ** Select on the left site the User menu
 ** Provide a username of your choice
@@ -57,6 +57,8 @@ To do so, click on the "Download .csv" button and store the file on your machine
 * Verify that you are connected to the *USA Ost (Nord-Virginia) us-east-1* Region in the top right corner. If not, change to that region.
 
 === Create a VPC
+
+TIP: In your account is a default VPC in each region. For your deployment, we will use a new dedicated VPC.
 
 * The VPC is your virtual data center, where all the resources will be located. 
 * The VPC boundary is the network. 
@@ -90,9 +92,22 @@ WARNING: This private key file will always be needed to access a server on AWS a
 
 === Configure the database server
 
+* Connect to server via ssh
+
+** For macOS
+*** Open the terminal
+*** Change the permission of the downloaded pem file to 400
+*** Connect to the public IP of the server with the user ec2-user (ssh -i "path to your pem file" ec2-user@"Public IP of the server")
+
+** For Windows 
+*** Use putty to connect to the server. You need to transform the pem file in a putty format. 
+*** Details can be found here: 
+https://docs.aws.amazon.com/de_de/AWSEC2/latest/UserGuide/putty.html 
+
+
 * Install mongodb
 
-Add the mongodb repository to the system. */etc/yum.repos.d/mongodb-org-4.2.repo*
+Add the mongodb repository to the system. To do so, please create a new file */etc/yum.repos.d/mongodb-org-4.2.repo* and add the following content the file.
 
 ----
 [mongodb-org-4.2]
@@ -103,19 +118,27 @@ enabled=1
 gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
 ----
 
+----
 sudo yum install -y mongodb-org
+----
 
 * Configure mongodb to bind to any IP
 
+----
 sudo vi /etc/mongod.conf
+----
 
 Change bindIP to *0.0.0.0*
 
 * Start mongodb
 
+----
 sudo systemctl start mongod
+----
 
 === Configure the web server
+
+* Connect to the web server via ssh
 
 To run the web application some packages and configuration are need. 
 
@@ -130,6 +153,7 @@ sudo yum install git
 ----
 cd /opt
 sudo git clone https://github.com/iacstart/nodejs_sample.git
+cd nodejs_sample
 ----
 
 * Install nodejs
@@ -148,13 +172,13 @@ sudo npm install express morgan object-assign ejs mongodb
 
 * Configure Application
 
-Open the file /opt/nodejs_sample/server.js file. 
-Change the database server IP address to the address of your database server.
+Open the file */opt/nodejs_sample/server.js* file. 
+Change the database server IP address to the private IP address of your database server in the line "mongoHost".
 
 * Start the app
 
 Test that the app is running from the command line *sudo npm start*
-Open the URL of the server to check the web site
+Open the public URL of the web server with your local browser to check the web site
 
 * BONUS
 

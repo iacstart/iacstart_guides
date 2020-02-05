@@ -1,4 +1,4 @@
-:git: https://github.com/iacstart/aws_playbooks
+:git: https://github.com/iacgame/aws_playbooks.git
 
 = IaCStart - So it Begins
 
