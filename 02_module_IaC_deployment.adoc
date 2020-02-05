@@ -169,7 +169,7 @@ Now your are ready to extend your workflow by adding the Playbook for creating i
 * by adding the following to the *EXTRA VARIABLES* of *the Workflow*:
 
 ----
-instance_type: <instance type>
+instance_type: "<instance type>""
 ami_id: "<AMI ID>>"
 ssh_key: "<SSH Key>"
 ----
