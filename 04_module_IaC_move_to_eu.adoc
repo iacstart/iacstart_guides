@@ -5,7 +5,7 @@ Due to a new regulation requirement it is not longer allowed to run the shop in 
 Therefore, you need to delete the resources in the US and to deploy the shop in the AWS region eu-central-1.
 
 The SSH key pair is stored in the region. Therefore, you need to create a new key pair for europe. This the private key needs to be stored in the Ansible Tower as Credential which needs to be utilized in the Database and Application workflow. 
-It is recommended to use a new name for this key pair. This new name, needs also be utilizied during the instance creation which is a variable.
+It is recommended to use a new name for this key pair. This new name, needs also be utilized during the instance creation which is a variable.
 
 HINT: Some of the resources and IDs are region bounded.
 
