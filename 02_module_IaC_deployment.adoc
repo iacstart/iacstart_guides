@@ -128,7 +128,7 @@ A Playbook to deploy instances in AWS already exists in your Github repo, but yo
 
 WARNING: Before doing anything in the AWS web console, make sure you are in Region *US East (N. Virginia)*, check the drop-down in the upper right.
 
-First find a fitting instance size: Your VM should have *2 vCPUs and 2048 MiB Memory*.
+First find a fitting instance size: Your VM should have *2 vCPUs and 2048 MiB Memory*. To do so, 
 
 WARNING: Using another size will result in points reduction (not to mention AWS costs... ;-)
 
@@ -138,16 +138,16 @@ Take note of the instance type.
 
 ==== Find the Amazon Machine Image (AMI) ID 
 
-There are multiple ways to find an AMI suitable for your application. In our scenario you are going to  use *CentOS 7* in the latest release as operating system. So you have to:
+There are multiple ways to find an AMI suitable for your application. In our scenario you are going to  use *Ubuntu 18.04 LTS - Bionic* in the latest release as operating system. So you have to:
 
 * Find the proper AMI ID to pass to the Playbook
 * Make sure the AMI was created from a reliable source
 
 Finding the proper AMI ID can be tricky, here take this road:
 
-* Go to *www.centos.org -> Get CentOS now -> Amazon Web Services*
-* This will take you to the AWS Marketplace
-* On the overview page click *CentOS 7 (x86_64) - with Updates HVM*
+* Go to the AWS Marketplace *https://aws.amazon.com/marketplace*
+* On the overview page search *Ubuntu 18.04*
+* Select in the search result the *Ubuntu 18.04 LTS - Bionic* entry.
 * You'll now get lots of information about the image, click the *Continue to Subscribe* button to the upper right.
 * Now click the *Continue to Configuration* button (bear with me, nearly there...)
 * AMI IDs are region-specific, on the next page choose *US East (N. Virginia)* as *Region* and, lo and behold, you'll get the AMI ID to the right.
