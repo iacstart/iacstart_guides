@@ -249,12 +249,14 @@ Your Playbook repository contains Playbooks that deploy a simple two-tier (webse
 * Create a Job Template for the database deployment:
 ** Name it *iacstart_install_database* that uses the *install_database.yml* Playbook.
 ** Make it use the inventory *iacstart*
-** Make sure it's only run on the database instance, limit the scope by setting *LIMIT* to `tag_Name_iacstart_db`.
+** For credentials use *AWS SSH*
+** Make sure it only runs on the database instance, limit the scope by setting *LIMIT* to `tag_Name_iacstart_db`.
 
 * Create a Job Template for the final application deployment:
 ** Name it *iacstart_install_application* that uses the *install_sinatra.yml* Playbook.
 ** Make it use the inventory *iacstart*
-** Make sure it's only run on the database instance, limit the scope by setting *LIMIT* to `tag_Name_iacstart_web`.
+** For credentials use *AWS SSH*
+** Make sure it only runs on the database instance, limit the scope by setting *LIMIT* to `tag_Name_iacstart_web`.
 
 TIP: You can copy the instance deploy Playbook and adapt the settings.
 
