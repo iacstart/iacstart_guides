@@ -100,6 +100,7 @@ vpc_cidr: "10.101.0.0/16"
 subnet_cidr: "10.101.1.0/24"
 state: "present"
 region: "us-east-1"
+aws_zone: "us-east-1a"
 ----
 
 WARING: Make sure to keep the *---* in place as they are! This tells Tower the format is YAML.
