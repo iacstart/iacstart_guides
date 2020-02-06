@@ -2,18 +2,17 @@
 
 WARNING: Starting NOW, the revenue from the shop will not count until the shop is available with an EU IP-Address and the facilitators have been informed about the new IP.
 
-
 Due to a new regulation requirement it is not longer allowed to run the shop in the US. Therefore, you need to *delete the resources in the US* and to *deploy the shop into AWS region "eu-central-1"*. Because your complete application deployment is automated, this should be straight forward. A couple of things have to be taken care of: 
 
 * SSH key pairs are created and stored in the region. 
 ** Therefore, you need to create a new SSH key pair for Europe. It is recommended to use a new name for this key pair.
-** The new private key needs to be configured in Ansible Tower as Credential to be available in the Database and Application creation Job Templates. 
-** This new Key Pair needs also be used by the instance creation Job Template, where it is set as a variable.
+** The new private key needs to be configured in Ansible Tower as Machine Credential and to be used in the Database and Application creation Job Templates. 
+** This new Key Pair needs also be used by the instance creation Job Template, it is set as a variable in the Workflow template.
 * A couple more variables are region dependend, including the SSH key name you have to change four variables. 
 * The dynamic inventory you created before points to the wrong region
 * A new elastic IP needs to be allocated and attached to the web server.
 
 TIP: You've done all of this already, refer back to the sprint guides. 
 
-Remember to communicate the new IP to the facilitators as soon as possible!
+WARNING: Remember to communicate the new IP to the facilitators as soon as possible!
 

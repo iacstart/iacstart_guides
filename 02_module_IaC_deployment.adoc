@@ -1,4 +1,4 @@
-= IaCStart - Initial Deployment
+= IaCStart - Initial Web Shop Deployment
 
 By now you should have access to your 
 
@@ -14,6 +14,10 @@ And the following tasks should have been completed:
 
 WARNING: If not please don't proceed and ask for assistance!
 
+WARNING: The revenue from the shop will count for points when your shop is available under the *AWS Elastic IP* you have communicated in the last sprint.
+
+*So it's time to get your web shop deployed!*
+
 == Using Ansible Tower Workflows
 
 Workflows are a feature that Tower adds to Ansible Automation. You basically link separate Job Templates (Playbooks) (which could have been authored by different people) into one "Meta-Playbook".
@@ -25,7 +29,7 @@ We'll use Workflows in our scenario, just remember they are part of Tower's feat
 As a starting point create the Workflow without running any Playbooks, we'll add them one by one later on.
 
 * Open your Ansible Tower web interface.
-* In the menu bar to the left choose *Resources -> Templates*.
+* In the menu bar to the left choose *Templates*.
 * In the upper right click the green *+* icon and choose *Workflow Template*.
 * Enter a name for the Workflow: *iacstart* and click the *SAVE* button.
 
@@ -44,7 +48,7 @@ The Playbook named `create_vpc_complete.yml` already exists in your Github repos
 
 === Create Job Template
 
-* In *Resources -> Templates* click the green *+* and choose *Job Template*. Fill in the needed fields:
+* In *Templates* click the green *+* and choose *Job Template*. Fill in the needed fields:
 
 * Name it
 ** *Name*: *iac_create_vpc*
@@ -64,7 +68,7 @@ WARNING: While you get more familiar with Ansible Tower we'll use less and less 
 
 Now add the Job Template to your Workflow using the Workflow Visualizer:
 
-* In Tower's web interface open your Workflow Template by going to *Resources -> Templates* and then clicking your workflow template name.
+* In Tower's web interface open your Workflow Template by going to *Templates* and then clicking your workflow template name.
 * Click the *WORKFLOW VISUALIZER* button
 * You get an empty workflow window. 
 
@@ -111,7 +115,7 @@ WARNING: Make sure to keep the *---* in place as they are! This tells Tower the 
 
 *You are ready to run the workflow*
 
-* Go to *Resources -> Templates* and click the "Rocket" icon for your workflow to launch it.
+* Go to *Templates* and click the "Rocket" icon for your workflow to launch it.
 * Watch it run, you can get detailed information by clicking the *DETAILS* button of the workflow node. The easiest way back to the Workflow output is the browsers back button.
 
 Your Workflow should have created a new VPC, check in the AWS console. Now try to run the workflow again. As your IaC automation is idempotent it describes of how "things should be" regardless how many times you run it.
@@ -201,7 +205,7 @@ Ansible can query Cloud Providers for instances and their IP addresses to get an
 
 In your Ansible Tower web UI:
 
-* Got to *Resources-> Inventories*
+* Got to *Inventories*
 * Click the green *+* icon and choose *Inventory*
 * Create a new Inventory:
 ** *NAME*: iacstart
@@ -216,6 +220,7 @@ In your Ansible Tower web UI:
 ** *REGION*: US East (Northern Virginia)
 ** *UPDATE OPTIONS*: tick *OVERWRITE*
 ** *INSTANCE FILTERS*: tag:Name=iacstart*
+* Click *SAVE*
 
 TIP: The last setting is for making sure we only return instance which are named `iacstart<something>`. Just to make sure we don't return any other instances which might live in the same VPC/Subnet. 
 
@@ -278,24 +283,30 @@ TIP: Infrastructure as Code done right is idempotent
 
 To test your deployment, get the IP address of your webserver from the inventory in Ansible Tower or from the AWS console in the EC2 instance details. Then just open it in your browser.
 
-=== Challenge: Use Elastic IP
+=== Challenge: Associate Elastic IP
 
-Until now your instances have an IP address reachable from the Internet, but this address is not static, meaning it'll change after reboots. Not good for a web shop. If you remember you added the Playbook `allocate_eip.yml` as the first test of your setup and allocated an Elastic (means fixed in AWS lingo) IP to your account.
+Until now your instances have an IP address reachable from the Internet, but this address is not static, meaning it'll change after reboots. *Not good for a web shop*. If you remember you added the Playbook `allocate_eip.yml` as the first test of your setup and allocated an Elastic (means fixed in AWS lingo) IP to your account.
 
 Now you have to associate the IP with your webserver. This is for you to do on your own. A couple of hints:
 
-* Use the Github.com web UI to create the new Playbook `associate_eip.yml`. Here is a example task. The example IP and device_id have to be replaced by your values, make them configurable through variables:
+* Use the Github.com web UI to create the new Playbook `associate_eip.yml` (*Create new file* button, *Commit new file* to "save"). Here is a template for the task, the *ip*, *region* and *instance_id* parameters have to use your values, make them configurable through variables.
 
 ----
 - name: associate an elastic IP with an instance
   ec2_eip:
-    device_id: i-1212f003
-    ip: 93.184.216.119
+    instance_id: <CHANGE TO VARIABLE>
+    ip: <CHANGE TO VARIABLE>
+    region: <CHANGE TO VARIABLE>
     allow_reassociation: yes
 ----
 
+* For a complete example have a look at the existing `allocate_eip.yml` Playbook.
+
 TIP: Remember variable are done like this in Ansible Playbooks: `"{{...}}"`
 
-* Use the `allocate_eip.yml` Playbook as a template
-* Make the values configurable by two variables (to be put in the *EXTRA VARIABLES* field of the Tower Job Template)
-* Create a Job Template in Ansible Tower that uses the new Playbook.
+* Make the values configurable by three variables (to be put in the *EXTRA VARIABLES* field of the Tower Job Template)
+* Look up the *instance_id* and *ip* in the AWS console, make sure you know the name of the *region*.
+* Create a Job Template in Ansible Tower that uses the new Playbook and sets the *EXTRA VARIABLES*.
+* Run the Job Template.
+
+WARNING: This sprint counts as successfully finished when your web shop is reachable under the AWS Elastic IP!
