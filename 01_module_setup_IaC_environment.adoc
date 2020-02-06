@@ -45,8 +45,8 @@ The first step is to configure Ansible Tower to talk to AWS using your account c
 To do so work through these steps:
 
 * Bring up the Tower web interface and configure a new cloud credential:
-** Select "Credentials" in the left menu
-** Add a new Cloud Credential by clicking the "+" button
+** Select *Credentials* in the left menu
+** Add a new Cloud Credential by clicking the *+* button
 ** Fill in the *NAME* field with *AWS* 
 ** In the *CREDENTIAL TYPE* Field, click the magnifying glass and select *Amazon Web Services* as type
 ** Now the fields *ACCESS KEY* and *SECRET KEY* open, enter the respective keys. The keys can be found in the downloaded CSV file from AWS. 
@@ -57,11 +57,11 @@ To do so work through these steps:
 In the next steps, you need to add the ssh private key to the Ansible Tower, so that you can use this key during the playbooks.
 
 * Bring up the Tower web interface and configure a new cloud credential:
-** Select "Credentials" in the left menu
-** Add a new Cloud Credential by clicking the "+" button
+** Select *Credentials* in the left menu
+** Add new Cloud Credentials by clicking the *+* button
 ** Fill in the *NAME* field with *AWS SSH* 
 ** In the *CREDENTIAL TYPE* Field, click the magnifying glass and select *Machine* as type
-** Open the *ssh-access.pem* file, which you have downloaded during module 0, with a text editor and copy the whole content.
+** Open the *<ssh-access.pem>* file you downloaded earlier (the name will be different), which you have downloaded during module 0, with a text editor and copy the whole content.
 ** Paste the content into the *SSH PRIVATE KEY* field. 
 ** Save the credentials
 
@@ -76,32 +76,36 @@ So to check everything works and to walk you through the process of setting up a
 * Create a new *Project*. Projects in Tower are pointers to version control systems holding the needed files, in this case, your Github repository.
 
 ** Bring up the Tower web interface
-** Select "Projects" in the left menu
-** Add a new Project by clicking the "+" button
-*** Project Name "IaC Start"
-*** SCM Type "Git"
-*** SCM URL (Your Repository, the URL can be copied by opening the repository on GitHub, click the "Clone or download" button and then the clipboard icon)
+** Select *Projects* in the left menu
+** Add a new Project by clicking the *+* button
+*** *PROJECT NAME* IaC Start
+*** *SCM TYPE* Git
+*** *SCM URL* (Your Repository, the URL can be copied by opening the repository on GitHub, click the "Clone or download" button and then the clipboard icon)
+*** For *SCM UPDATE OPTIONS* tick "Clean" and "Update Revision on Launch"
 
 WARNING: Make sure to use the *https* URL
 
-** Save the project
+* Save the Project
 
 === First Test: Create a Job Template
 
 * Now create a *Job Template*. Tower Job Templates describe an Ansible job (like a blueprint) which can later be used to start a job.
 
 ** Bring up the Tower web interface
-** Select "Templates" in the left menu
-** Add a new Job Template by clicking the "+" button and select "Job Template"
-*** Name "Elastic IP"
-*** Job Type "Run"
-*** Inventory "Demo Inventory"
-*** Project "IaC Start"
-*** Playbook "allocate_eip.yml"
-*** Credentials "AWS" (Type: "Amazon Web Services")
-*** For "SCM UPDATE OPTIONS" tick "Clean" and "Update Revision on Launch"
+** Select *Templates* in the left menu
+** Add a new Job Template by clicking the *+* button and select *Job Template*
+*** *NAME*: Elastic IP
+*** *JOB TYPE* Run
+*** *INVENTORY*: Demo Inventory
+*** *PROJECT*: IaC Start
+*** *PLAYBOOK*: allocate_eip.yml
+*** *CREDENTIALS*: AWS 
+**** Type: "Amazon Web Services"
+*** In the *EXTRA VARIABLES* field, fill in *region: us-east-1* as second line. 
 
-* Click *SAVE*
+WARNING: Make sure to leave the *---* at the top as they are.
+
+** Click *SAVE*
 
 
 So now you have configured Tower to run one of the Playbooks from your Github repo. Before starting it, have a look at the Playbook to get an idea of how it looks like and to get an idea of what it might do.
@@ -113,18 +117,18 @@ Here is your Playbook:
 ----
 ---
 - hosts: localhost
- connection: local
- gather_facts: False
+  connection: local
+  gather_facts: False
 
- tasks:
- - name: allocate a new elastic IP without associating it to anything
- ec2_eip:
- state: present
- region: eu-central-1
- register: eip
+  tasks:
+  - name: allocate a new elastic IP without associating it to anything
+    ec2_eip:
+      state: present
+      region: "{{ region }}"
+    register: eip
 ----
 
-It doesn't look too complicated, what do you think? All it does is to create an *EC2 Elastic IP* in your account which can be attached to instances (virtual machines) later.
+It doesn't look too complicated, what do you think? All it does is to allocate an *EC2 Elastic IP* in your account which can be attached to instances (virtual machines) later. The *{{...}}* construct is a variable, you defined the content in the *EXTRA VARIABLES* field already.
 
 === Start the First Ansible Job
 
