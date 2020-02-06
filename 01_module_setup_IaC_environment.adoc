@@ -147,21 +147,21 @@ For the fun of it go to your AWS web console to make sure the EIP is there!
 * Open the AWS console https://console.aws.amazon.com/
 * Log-in with the provided Credentials
 * Open the EC2 Console within the service menu
-* Verify that you are connected to the *USA Ost (Nord-Virginia) us-east-1* Region in the top right corner. If not, change to that region.
+* Verify that you are connected to the *USA Ost (North-Virginia) us-east-1* Region in the top right corner. If not, change to that region.
 * Click on the "Elastic IPs" in the middle of the screen
 * Write down the Public IPv4 address, which was created by the playbook before.
 
-WARNING: Communicate the IP address together with the team name to the facilitators. aka. *MR. DNS*
+WARNING: Communicate the IP address together with the team name to the facilitators (aka. *MR. DNS*) to claim your points ASAP!
 
 == Review what you have done so far.
 
-* You have log-in into the AWS console and created a user to work with. 
-* You have created the *access key* to access the AWS API and an *ssh key pair* to login into the servers on AWS.
-* You have login into the Red Hat Ansible Tower system, which will be the central system to manage and execute every automation step.
+* You accessed the AWS console and created a user to work with. 
+* You have created the *access key* to access the AWS API and an *ssh key pair* to login into deployed instances (Virtual Machines) on AWS.
+* You accessed the Red Hat Ansible Tower web interface, which will be the central system to manage and execute every automation step.
 * You have stored the *access key* and *ssh key pair* within the secret store of the Ansible Tower so that the Ansible Tower can use these credentials.
 * You have created your first Ansible Automation Workflow to execute an existing playbook, which will log in to AWS with your key and created an *Elastic IP* as a fixed IP for your Website.
 
-These steps will be the foundation for the rest of the day. You will now use Ansible Tower to point to the playbook, which you will create to deploy all parts of your environment and to fix any broken part, where maybe the Chaos Monkey or his little helpers will give you some trouble.
+These steps will be the foundation for the rest of the day. You will now use Ansible Tower to deploy your environment and to fix any broken part, where maybe the Chaos Monkey or his little helpers will give you some trouble.
 
 
 
