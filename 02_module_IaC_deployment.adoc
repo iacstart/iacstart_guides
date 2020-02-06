@@ -105,14 +105,14 @@ region: "us-east-1"
 aws_zone: "us-east-1a"
 ----
 
-WARING: Make sure to keep the *---* in place as they are! This tells Tower the format is YAML.
+WARNING: Make sure to keep the *---* in place as they are! This tells Tower the format is YAML.
 
 * Click *SAVE*
 
 *You are ready to run the workflow*
 
 * Go to *Resources -> Templates* and click the "Rocket" icon for your workflow to launch it.
-* Watch it run, you can get detailed information by clicking the *DETAILS* button of the workflow node.
+* Watch it run, you can get detailed information by clicking the *DETAILS* button of the workflow node. The easiest way back to the Workflow output is the browsers back button.
 
 Your Workflow should have created a new VPC, check in the AWS console. Now try to run the workflow again. As your IaC automation is idempotent it describes of how "things should be" regardless how many times you run it.
 
@@ -130,13 +130,13 @@ A Playbook to deploy instances in AWS already exists in your Github repo, but yo
 
 WARNING: Before doing anything in the AWS web console, make sure you are in Region *US East (N. Virginia)*, check the drop-down in the upper right.
 
-First find a fitting instance size: Your VM should have *2 vCPUs and 2048 MiB Memory*. To do so, 
+First find a fitting instance size: Your VMs should have *2 vCPUs and 2048 MiB Memory*.  
 
 WARNING: Using another size will result in points reduction (not to mention AWS costs... ;-)
 
-In your AWS web console open *Services -> EC2*. In the left menu bar choose *Instance Types*. You will get a list of all available instance sizes for this region, use the filter to find the one providing the neede resources, but not more. There should only be two instance types which combine the right vCPU count and Memory size. 
+In your AWS web console open *Services -> EC2*. In the left menu bar choose *Instance Types*. You will get a list of all available instance sizes for this region, use the filter to find the one providing the needed resources, but not more. There should only be two instance types which combine the right vCPU count and Memory size. 
 
-Take note of the instance type.
+Take note of the instance types.
 
 ==== Find the Amazon Machine Image (AMI) ID 
 
@@ -151,6 +151,8 @@ Finding the proper AMI ID can be tricky, here take this road:
 * On the overview page search *Ubuntu 18.04*
 * Select in the search result the *Ubuntu 18.04 LTS - Bionic* entry.
 * You'll now get lots of information about the image, click the *Continue to Subscribe* button to the upper right.
+* Click *Accept Terms* and wait until the *Continue to Configuration* becomes active.
+* Check in the image details if it is available in the instance size you selected earlier (only one of the two sizes will be).
 * Now click the *Continue to Configuration* button (bear with me, nearly there...)
 * AMI IDs are region-specific, on the next page choose *US East (N. Virginia)* as *Region* and, lo and behold, you'll get the AMI ID to the right.
 * Copy the ID
@@ -162,11 +164,11 @@ NOTE: Even if this feels tiresome for now, remember you would have to go through
 Now your are ready to extend your workflow by adding the Playbook for creating instances. You have done the required steps already when integrating the VPC creation into the workflow. Here is what you have to do:
 
 * Create a Job Template named *iac_create_instance* pointing to the `create_instance.yml` Playbook.
-* Define the variables needed by the Playbook:
+* Now open the *Workflow* and define the variables needed by the Playbook:
 ** Instance Type 
-** AMI ID you found for the CentOS AMI
+** AMI ID you found for the AMI
 ** The name of your SSH key
-* by adding the following to the *EXTRA VARIABLES* of *the Workflow*:
+* by adding the following to the *EXTRA VARIABLES* field of *the Workflow*:
 
 ----
 instance_type: "<instance type>""
@@ -174,7 +176,7 @@ ami_id: "<AMI ID>>"
 ssh_key: "<SSH Key>"
 ----
 
-* Extend your workflow using the *WORKFLOW VISUALIZER* to add a new node after the node creating the VPC. Configure the node to run the *iac_create_instance* Job Template.
+* Extend your workflow using the *WORKFLOW VISUALIZER* to add a new node (hover the mouse pointer over the existing node and click the green *+* icon) after the node whoch creates the VPC. Configure the node to run the *iac_create_instance* Job Template.
 
 *Go and execute the Workflow Template* by clicking the Rocket item in the Template list an Ansible Tower.
 
