@@ -6,7 +6,7 @@ By now you should have gotten an introduction to what Infrastructure-as-Code is 
 
 * The first step is to get access to the tools you'll use: Github, Ansible Tower, and the AWS console.
 * To get you started you'll get some simple tasks with a lot of help from this guide and the facilitators.
-* Afterwards you'll get game modules with tasks that 
+* Afterwards you'll get game sprint guides with tasks that 
 ** will get increasingly more complex
 ** come with less help
 
@@ -61,7 +61,7 @@ In the next steps, you need to add the ssh private key to the Ansible Tower, so 
 ** Add new Cloud Credentials by clicking the *+* button
 ** Fill in the *NAME* field with *AWS SSH* 
 ** In the *CREDENTIAL TYPE* Field, click the magnifying glass and select *Machine* as type
-** Open the *<ssh-access.pem>* file you downloaded earlier (the name will be different), which you have downloaded during module 0, with a text editor and copy the whole content.
+** Open the *<ssh-access.pem>* file you downloaded earlier (the name will be different), which you have downloaded during sprint 0, with a text editor and copy the whole content.
 ** Paste the content into the *SSH PRIVATE KEY* field. 
 ** Save the credentials
 
