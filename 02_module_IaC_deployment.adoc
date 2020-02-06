@@ -193,7 +193,7 @@ But just having two VMs running is not providing lots of business value. So afte
 
 you'll have do add Playbooks for application installation and configuration to the workflow.
 
-WARNING: *But Wait*: Before we can go from deploying instances to installing something inside of them, we have to get the IP addresses and make them known to Ansible Tower so Ansible cn talk to them.
+WARNING: *But Wait*: Before we can go from deploying instances to installing something inside of them, we have to get the IP addresses and make them known to Ansible Tower so Ansible can talk to them.
 
 ==== Setting up a Dynamic Inventory
 
