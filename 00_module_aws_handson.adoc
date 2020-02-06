@@ -193,7 +193,7 @@ Ensure that the web server application is running after with as deamon with a en
 
 == Clean up AWS
 
-In the next modules of the game, you will deploy the resources with Ansible. Therefore please clean up your AWS account.
+In the next sprints of the game, you will deploy the resources with Ansible. Therefore please clean up your AWS account.
 
 * Open the EC2 console and select the both running instances and set the *Instance state* to *Terminate* and wait until both instances are terminated.
 * Open the VPC console and select your VPC and delete the VPC
