@@ -2,17 +2,42 @@
 
 = IaCStart - Scale the frontend to cope with the load
 
-The marking department has changed the process to ship new images for the web site. At the moment the images are part of the application deployment, which means, that every image change involves an application deployment. 
+The marking department has changed the process to ship new images for the web site. At the moment the images are served from an external service, which isn't reliable enough. 
 
-The images will be provided on a central NFS Storage, which will utilize the Cloud Volume Services from NetApp on AWS.
+The images will now be provided on a central NFS Storage, which will utilize the Cloud Volume Services from NetApp on AWS.
 
 The CVS is available from the central AWS team. Due to the architecture of this game environment, you need to utilize a other VPC and Subnet, which we have already deployed to your account. 
 
-So you need to destroy your current environment and redeploy the whole infrastructure into the given Subnet. You can identify the target Subnet in the VPC console with the CIDR, which starts with 10.128.
+So you need to destroy your current environment and redeploy the whole infrastructure into the subnet, which we have preprovided for this game environment. 
+
+* Terminate your existing instances and delete the VPC
+* Change the playbook in the *iac_create_vpc* job template to use the *use_existing_vpc* playbook.
+* Lookup the *Subnet ID* in the VPC console of the target subnet. You can identify the subnet on the network CIDR, which starts with 10.128..
+* Change the *iacstart* Workflow in the Ansible Tower
+* Remove the following variables from the workflow: vpc, vpc_cidr, subnet_cidr
+* Add the the following variables to the workflow:
+vpc_id: "vpc-0eaea42a6ae519aa7"
+vpc_subnet_id: as looked-up above
+
+Now you need to create a new job template with the playbook *mount_nfs*
+
+* Create a Job Template for the final application deployment:
+** Name it *iacstart_mount_nfs* that uses the *mount_nfs.yml* Playbook.
+** Make it use the inventory *iacstart*
+** For credentials use *AWS SSH*
+** Make sure it only runs on the database instance, limit the scope by setting *LIMIT* to `tag_Name_iacstart_web`.
+
+TIP: You can copy the instance deploy Playbook and adapt the settings.
+
+This template needs to be added to the workflow between the *iac_create_instance* and the *iacstart_install_database*
 
 
-The NFS share name is {nfs-share}
+INTERNAL:
+Write playbook 
 
-To use the new images you need to mount the NFS share and you need to deploy the new version of the application.
+mkdir /opt/iac_shop/public/images/robo
+
+sudo mount -t nfs -o rw,hard,rsize=65536,wsize=65536,vers=3,tcp 10.10.10.4:/elated-fervent-engelbart /opt/iac_shop/public/images/robo
+
 
 Only the revenue of the new application version will count against your overall result. 
