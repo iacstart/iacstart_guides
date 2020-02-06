@@ -151,7 +151,7 @@ Finding the proper AMI ID can be tricky, here take this road:
 * On the overview page search *Ubuntu 18.04*
 * Select in the search result the *Ubuntu 18.04 LTS - Bionic* entry.
 * You'll now get lots of information about the image, click the *Continue to Subscribe* button to the upper right.
-* Click *Accept Terms* and wait until the *Continue to Configuration* becomes active.
+* If an *Accept Terms* pops up, click it and wait until the *Continue to Configuration* becomes active.
 * Check in the image details if it is available in the instance size you selected earlier (only one of the two sizes will be).
 * Now click the *Continue to Configuration* button (bear with me, nearly there...)
 * AMI IDs are region-specific, on the next page choose *US East (N. Virginia)* as *Region* and, lo and behold, you'll get the AMI ID to the right.
@@ -171,8 +171,8 @@ Now your are ready to extend your workflow by adding the Playbook for creating i
 * by adding the following to the *EXTRA VARIABLES* field of *the Workflow*:
 
 ----
-instance_type: "<instance type>""
-ami_id: "<AMI ID>>"
+instance_type: "<instance type>"
+ami_id: "<AMI ID>"
 ssh_key: "<SSH Key>"
 ----
 
