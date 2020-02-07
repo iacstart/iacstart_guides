@@ -33,12 +33,7 @@ As a starting point create the Workflow without running any Playbooks, we'll add
 * In the upper right click the green *+* icon and choose *Workflow Template*.
 * Enter a name for the Workflow: *iacstart* and click the *SAVE* button.
 
-The visual workflow designer opens, hit the *CLOSE* button it for now. Your Workflow is now ready to be filled with Job Templates (Playbooks). To use an Ansible Playbook as part of a workflow you have to:
-
-* Create a Job Template using a Playbook.
-* Add the Job Template to the Workflow Template.
-
-And that's what you are going to do now.
+The visual workflow designer opens, hit the *CLOSE* button it for now. Your Workflow is now ready to be filled with Job Templates (Playbooks). Now you'll add Playbooks to the Workflow to have it automate something. And that's what you are going to do now.
 
 == Create an AWS *Virtual Private Cloud* (VPC)
 
@@ -52,10 +47,11 @@ The Playbook named `create_vpc_complete.yml` already exists in your Github repos
 
 * Name it
 ** *Name*: *iac_create_vpc*
+* make sure *JOB TYPE* is set to *Run*
 * What hosts to run on 
 ** *Inventory*: Demo Inventory
 * The Github repo
-** *Project*: iacstart
+** *Project*: iacstart (or whatever you called it)
 * Choose the Playbook from the repo
 ** *Playbook*: create_vpc_complete.yml
 * What credentials to use
@@ -118,7 +114,7 @@ WARNING: Make sure to keep the *---* in place as they are! This tells Tower the 
 * Go to *Templates* and click the "Rocket" icon for your workflow to launch it.
 * Watch it run, you can get detailed information by clicking the *DETAILS* button of the workflow node. The easiest way back to the Workflow output is the browsers back button.
 
-Your Workflow should have created a new VPC, check in the AWS console. Now try to run the workflow again. As your IaC automation is idempotent it describes of how "things should be" regardless how many times you run it.
+Your Workflow should have created a new VPC, check in the AWS console. Now try to run the workflow again. As your IaC automation is idempotent it describes of how "things should be" regardless of how many times you run it.
 
 === Create AWS Instances in your VPC
 

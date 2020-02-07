@@ -54,14 +54,14 @@ To do so work through these steps:
 
 === SSH Credentials
 
-In the next steps, you need to add the ssh private key to the Ansible Tower, so that you can use this key during the playbooks.
+In the next steps, you need to add the SSH private key to Ansible Tower, so that Playbooks can use this key to connect to AWS instances.
 
-* Bring up the Tower web interface and configure a new cloud credential:
+* Bring up the Tower web interface and configure a new credential:
 ** Select *Credentials* in the left menu
-** Add new Cloud Credentials by clicking the *+* button
+** Add new Credentials by clicking the *+* button
 ** Fill in the *NAME* field with *AWS SSH* 
 ** In the *CREDENTIAL TYPE* Field, click the magnifying glass and select *Machine* as type
-** Open the *<ssh-access.pem>* file you downloaded earlier (the name will be different), which you have downloaded during sprint 0, with a text editor and copy the whole content.
+** Open the *<ssh-access.pem>* file you downloaded earlier (the name might be different), which you have downloaded during sprint 0, with a text editor and copy the *whole* content.
 ** Paste the content into the *SSH PRIVATE KEY* field. 
 ** Save the credentials
 
@@ -89,12 +89,12 @@ WARNING: Make sure to use the *https* URL
 
 === First Test: Create a Job Template
 
-* Now create a *Job Template*. Tower Job Templates describe an Ansible job (like a blueprint) which can later be used to start a job.
+* Now create a *Job Template*. In Ansible Tower *Job Templates* describe an Ansible job (like a blueprint) which can later be used to start a job.
 
 ** Bring up the Tower web interface
 ** Select *Templates* in the left menu
 ** Add a new Job Template by clicking the *+* button and select *Job Template*
-*** *NAME*: Elastic IP
+*** *NAME*: elastic_ip
 *** *JOB TYPE* Run
 *** *INVENTORY*: Demo Inventory
 *** *PROJECT*: IaC Start
@@ -103,7 +103,7 @@ WARNING: Make sure to use the *https* URL
 **** Type: "Amazon Web Services"
 *** In the *EXTRA VARIABLES* field, fill in *region: us-east-1* as second line. 
 
-WARNING: Make sure to leave the *---* at the top as they are.
+WARNING: Make sure to leave the *---* at the top as they are in the *EXTRA VARIABLES* field.
 
 ** Click *SAVE*
 
@@ -149,17 +149,17 @@ For the fun of it go to your AWS web console to make sure the EIP is there!
 * Open the EC2 Console within the service menu
 * Verify that you are connected to the *USA Ost (North-Virginia) us-east-1* Region in the top right corner. If not, change to that region.
 * Click on the "Elastic IPs" in the middle of the screen
-* Write down the Public IPv4 address, which was created by the playbook before.
+* Write down the Public IPv4 address, which was created by the Playbook.
 
-WARNING: Communicate the IP address together with the team name to the facilitators (aka. *MR. DNS*) to claim your points ASAP!
+WARNING: *Communicate the IP address together with the team name to the facilitators (aka. MR. DNS) to claim your points ASAP!*
 
 == Review what you have done so far.
 
 * You accessed the AWS console and created a user to work with. 
 * You have created the *access key* to access the AWS API and an *ssh key pair* to login into deployed instances (Virtual Machines) on AWS.
 * You accessed the Red Hat Ansible Tower web interface, which will be the central system to manage and execute every automation step.
-* You have stored the *access key* and *ssh key pair* within the secret store of the Ansible Tower so that the Ansible Tower can use these credentials.
-* You have created your first Ansible Automation Workflow to execute an existing playbook, which will log in to AWS with your key and created an *Elastic IP* as a fixed IP for your Website.
+* You have stored the *access key* and *ssh key pair* within the secret store of the Ansible Tower so that the Ansible Tower can use these credentials to connect to AWS.
+* You have created your first Ansible Job Template to execute an existing Playbook, which will log in to AWS with your key and created an *Elastic IP* as a fixed IP for your Application.
 
 These steps will be the foundation for the rest of the day. You will now use Ansible Tower to deploy your environment and to fix any broken part, where maybe the Chaos Monkey or his little helpers will give you some trouble.
 
