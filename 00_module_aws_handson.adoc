@@ -1,5 +1,6 @@
 
 
+:icons: font
 :git: https://github.com/iacgame/nodejs_sample.git 
 
 = IaCStart - Let's deploy your first app on AWS

@@ -1,3 +1,5 @@
+:icons: font
+
 :git: https://github.com/iacgame/aws_playbooks.git
 
 = IaCStart - So it Begins

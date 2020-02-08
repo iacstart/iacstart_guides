@@ -1,3 +1,5 @@
+:icons: font
+
 :nfs-share: 10.10.10.4:/elated-fervent-engelbart
 
 = IaCStart - Scale the frontend to cope with the load

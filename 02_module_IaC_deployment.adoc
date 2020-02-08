@@ -1,3 +1,5 @@
+:icons: font
+
 = IaCStart - Initial Web Shop Deployment
 
 By now you should have access to your 
