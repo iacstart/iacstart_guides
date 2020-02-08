@@ -1,4 +1,6 @@
-:git: https://github.com/iacstart/nodejs_sample.git 
+
+
+:git: https://github.com/iacgame/nodejs_sample.git 
 
 = IaCStart - Let's deploy your first app on AWS
 
@@ -54,7 +56,7 @@ Everything you'll do during this game is about deploying cloud-based infrastruct
 * After the user is successfully created, a result page will be shown, where you can download the access key for later use. 
 To do so, click on the "Download .csv" button and store the file on your machine.
 * Logout from the AWS console and login again with the created user. 
-* Verify that you are connected to the *USA Ost (Nord-Virginia) us-east-1* Region in the top right corner. If not, change to that region.
+* Verify that you are connected to the *USA Ost (Northern-Virginia) us-east-1* Region in the top right corner. If not, change to that region.
 
 === Create a VPC
 
@@ -150,9 +152,10 @@ sudo yum install git
 
 * Clone repo
 
+[subs="attributes"]
 ----
 cd /opt
-sudo git clone https://github.com/iacstart/nodejs_sample.git
+sudo git clone  {git}
 cd nodejs_sample
 ----
 
