@@ -1,3 +1,10 @@
+= ToDo
+Define the workflow variables
+Change the job template to use ssh key europe
+Change inventory
+Change job template delete to europe
+
+
 = IaCStart - Let's move to good old europe
 
 WARNING: Starting NOW, the revenue from the shop will not count until the shop is available with an EU IP-Address and the facilitators have been informed about the new IP.

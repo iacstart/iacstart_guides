@@ -2,6 +2,10 @@
 
 :nfs-share: 10.10.10.4:/elated-fervent-engelbart
 
+= ToDo
+Create job template in preperation
+
+
 = IaCStart - Scale the frontend to cope with the load
 
 The marking department has changed the process to ship new images for the web site. At the moment the images are served from an external service, which isn't reliable enough. 
