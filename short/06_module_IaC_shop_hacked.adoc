@@ -1,5 +1,0 @@
-= IaCStart - Scale the frontend to cope with the load
-
-Modul 6 (Shop gehackt) - Götz
-
-RHEL 8 neu!
