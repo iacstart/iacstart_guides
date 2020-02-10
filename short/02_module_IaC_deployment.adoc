@@ -1,0 +1,308 @@
+= IaCStart - Initial Web Shop Deployment
+
+By now you should have access to your 
+
+* AWS account and web console
+* Github account
+* Ansible Tower web interface
+
+And the following tasks should have been completed:
+
+* AWS user and access key/SSH key have been created
+* Github repos with IaC Playbooks and application code have been cloned into your team account
+* Ansible Tower is configured with your AWS credentials and Github repositories
+
+WARNING: If not please don't proceed and ask for assistance!
+
+WARNING: The revenue from the shop will count for points when your shop is available under the *AWS Elastic IP* you have communicated in the last sprint.
+
+*So it's time to get your web shop deployed!*
+
+== Using Ansible Tower Workflows
+
+Workflows are a feature that Tower adds to Ansible Automation. You basically link separate Job Templates (Playbooks) (which could have been authored by different people) into one "Meta-Playbook".
+
+We'll use Workflows in our scenario, just remember they are part of Tower's feature set and are not part of Ansible Engine/command line. So let's get started, you have a repository filled with Playbooks you need to integrate using Tower.
+
+== Create an empty Tower Workflow
+
+As a starting point create the Workflow without running any Playbooks, we'll add them one by one later on.
+
+* Open your Ansible Tower web interface.
+* In the menu bar to the left choose *Templates*.
+* In the upper right click the green *+* icon and choose *Workflow Template*.
+* Enter a name for the Workflow: *iacstart* and click the *SAVE* button.
+
+The visual workflow designer opens, hit the *CLOSE* button it for now. Your Workflow is now ready to be filled with Job Templates (Playbooks). Now you'll add Playbooks to the Workflow to have it automate something. And that's what you are going to do now.
+
+== Create an AWS *Virtual Private Cloud* (VPC)
+
+As already discussed during the introduction the first resource you need in AWS (and other clouds) is a VPC to separate your infrastructure components from other stuff probably running in your cloud environment. So let's start by autmomating the creation of the VPC.
+
+The Playbook named `create_vpc_complete.yml` already exists in your Github repository. First create a Job Template to make it usable in Tower:
+
+=== Create Job Template
+
+* In *Templates* click the green *+* and choose *Job Template*. Fill in the needed fields:
+
+* Name it
+** *Name*: *iac_create_vpc*
+* make sure *JOB TYPE* is set to *Run*
+* What hosts to run on 
+** *Inventory*: Demo Inventory
+* The Github repo
+** *Project*: iacstart (or whatever you called it)
+* Choose the Playbook from the repo
+** *Playbook*: create_vpc_complete.yml
+* What credentials to use
+** *Credentials* (Type *Amazon Web Services*): AWS
+* And finally click *SAVE*
+
+WARNING: While you get more familiar with Ansible Tower we'll use less and less verbose instructions in this guide.
+
+=== Add Template to Workflow
+
+Now add the Job Template to your Workflow using the Workflow Visualizer:
+
+* In Tower's web interface open your Workflow Template by going to *Templates* and then clicking your workflow template name.
+* Click the *WORKFLOW VISUALIZER* button
+* You get an empty workflow window. 
+
+Add the first Node by clicking *START*, an empty node gets added, configure it in the frame to the right: 
+
+* Leave the node type as *Template*
+* Search and select the *iac_create_vpc* job template
+* Click the *SELECT* button
+* Click *SAVE*
+
+[TIP] 
+.What have you done? 
+====
+You have:
+
+* Created an empty Workflow
+* Created a Job Template to run a Playbook
+* Added the template as the first step/node in your workflow
+====
+
+=== Parameterize and Run the Workflow
+
+You could now run the Workflow (it would of course only execute the first Playbook) but something is missing: Have a look at the `create_vpc_complete.yml` Playbook in Github. In the Ansible-code are a good number of *{{ ... }}* constructs. These are variables which have to be filled with content, making the Playbook more versatile without always having to change the code itself.
+
+There are multiple ways to supply variable content to a Job Template (Playbook), in our case put it into the Workflow definition in Tower:
+
+* Open the Workflow configuration in Tower
+* Find the text field *EXTRA VARIABLES*
+* Add the following variable definitions:
+
+----
+---
+vpc: "iacstart"
+vpc_cidr: "10.101.0.0/16"
+subnet_cidr: "10.101.1.0/24"
+state: "present"
+region: "us-east-1"
+aws_zone: "us-east-1a"
+----
+
+WARNING: Make sure to keep the *---* in place as they are! This tells Tower the format is YAML.
+
+* Click *SAVE*
+
+*You are ready to run the workflow*
+
+* Go to *Templates* and click the "Rocket" icon for your workflow to launch it.
+* Watch it run, you can get detailed information by clicking the *DETAILS* button of the workflow node. The easiest way back to the Workflow output is the browsers back button.
+
+Your Workflow should have created a new VPC, check in the AWS console. Now try to run the workflow again. As your IaC automation is idempotent it describes of how "things should be" regardless of how many times you run it.
+
+=== Create AWS Instances in your VPC
+
+The initial version of your application will consist of one webserver and one database server. The next step in your Infrastructure-as-Code setup is to deploy two cloud instances (Virtual Machines) to run your application. In the cloud you usually don't install operating systems from scratch, AWS (and other cloud providers) come with a large number of pre-made images you can use to start your instances. In AWS these are called "Amazon Machine Images (AMI)".
+
+A Playbook to deploy instances in AWS already exists in your Github repo, but you need some information to pass as parameters:
+
+* The *Instance Type*, defining the sizing of the VM (Memory, CPUs etc)
+* An *AMI ID*, basically what image/operating system to use.
+* What *SSH Key* to inject into the instance, so Ansible can later on connect to it using SSH. You already created this key during the AWS setup steps.
+
+==== Find the Instance Size
+
+WARNING: Before doing anything in the AWS web console, make sure you are in Region *US East (N. Virginia)*, check the drop-down in the upper right.
+
+First find a fitting instance size: Your VMs should have *2 vCPUs and 2048 MiB Memory*.  
+
+WARNING: Using another size will result in points reduction (not to mention AWS costs... ;-)
+
+In your AWS web console open *Services -> EC2*. In the left menu bar choose *Instance Types*. You will get a list of all available instance sizes for this region, use the filter to find the one providing the needed resources, but not more. There should only be two instance types which combine the right vCPU count and Memory size. 
+
+Take note of the instance types.
+
+==== Find the Amazon Machine Image (AMI) ID 
+
+There are multiple ways to find an AMI suitable for your application. In our scenario you are going to  use *Ubuntu 18.04 LTS - Bionic* in the latest release as operating system. So you have to:
+
+* Find the proper AMI ID to pass to the Playbook
+* Make sure the AMI was created from a reliable source
+
+Finding the proper AMI ID can be tricky, here take this road:
+
+* Go to the AWS Marketplace *https://aws.amazon.com/marketplace*
+* On the overview page search *Ubuntu 18.04*
+* Select in the search result the *Ubuntu 18.04 LTS - Bionic* entry.
+* You'll now get lots of information about the image, click the *Continue to Subscribe* button to the upper right.
+* If an *Accept Terms* pops up, click it and wait until the *Continue to Configuration* becomes active.
+* Check in the image details if it is available in the instance size you selected earlier (only one of the two sizes will be).
+* Now click the *Continue to Configuration* button (bear with me, nearly there...)
+* AMI IDs are region-specific, on the next page choose *US East (N. Virginia)* as *Region* and, lo and behold, you'll get the AMI ID to the right.
+* Copy the ID
+
+NOTE: Even if this feels tiresome for now, remember you would have to go through these steps only once, after your automation is finished you can just execute it again and again.
+
+=== Extend the Workflow 
+
+Now your are ready to extend your workflow by adding the Playbook for creating instances. You have done the required steps already when integrating the VPC creation into the workflow. Here is what you have to do:
+
+* Create a Job Template named *iac_create_instance* pointing to the `create_instance.yml` Playbook.
+* Now open the *Workflow* and define the variables needed by the Playbook:
+** Instance Type 
+** AMI ID you found for the AMI
+** The name of your SSH key
+* by adding the following to the *EXTRA VARIABLES* field of *the Workflow*:
+
+----
+instance_type: "<instance type>"
+ami_id: "<AMI ID>"
+ssh_key: "<SSH Key>"
+----
+
+* Extend your workflow using the *WORKFLOW VISUALIZER* to add a new node (hover the mouse pointer over the existing node and click the green *+* icon) after the node whoch creates the VPC. Configure the node to run the *iac_create_instance* Job Template.
+
+*Go and execute the Workflow Template* by clicking the Rocket item in the Template list an Ansible Tower.
+
+=== Check the State of your Nation
+
+If you go to the AWS web console now (set to the correct region) you should see two new instances coming up in the EC2 Service dashboard. When the icons in the *Instance State* and *Status Checks* columns change to green your instances are happily up and running. You could now go and connect to them e.g. by SSH.
+
+=== Installing the Application
+
+But just having two VMs running is not providing lots of business value. So after creating:
+
+* a VPC (your very own cloud datacenter) and network infrastructure
+* the instances (your VMs)
+
+you'll have do add Playbooks for application installation and configuration to the workflow.
+
+WARNING: *But Wait*: Before we can go from deploying instances to installing something inside of them, we have to get the IP addresses and make them known to Ansible Tower so Ansible can talk to them.
+
+==== Setting up a Dynamic Inventory
+
+Ansible can query Cloud Providers for instances and their IP addresses to get an inventory of servers it can talk to in subsequent Job Template runs. So this is something you have to do now first.
+
+In your Ansible Tower web UI:
+
+* Got to *Inventories*
+* Click the green *+* icon and choose *Inventory*
+* Create a new Inventory:
+** *NAME*: iacstart
+** Click *SAVE*
+* Now add a source to the Inventory:
+** Click the *SOURCES* button
+** Click the green *+* button
+** *NAME*: iacstartaws
+** *SOURCE*: Amazon EC2
+* For *SOURCE DETAILS*
+** *CREDENTIALS*: AWS
+** *REGION*: US East (Northern Virginia)
+** *UPDATE OPTIONS*: tick *OVERWRITE*
+** *INSTANCE FILTERS*: tag:Name=iacstart*
+* Click *SAVE*
+
+TIP: The last setting is for making sure we only return instance which are named `iacstart<something>`. Just to make sure we don't return any other instances which might live in the same VPC/Subnet. 
+
+Now give the new dynamic inventory a try:
+
+* Go to the *SOURCES* view of the new inventory
+* Click the circular arrow icon to start a sync
+* After the sync has finished, check the *HOSTS* view your two hosts should show up there with there addresses.
+
+==== Adding the Inventory Sync to the Workflow
+
+Now that the inventory sync is working, you can add it to the Workflow after the instance deploy step.
+
+* Open the Workflow by clicking the name from the template list
+* Now open the *WORKFLOW VISUALIZER*
+* Click the green *+* icon on the iac_create_instance node to open a new node
+* Configure the node to be an *Inventory Sync* node
+* Choose the inventory source to use
+* Click *SELECT* and *SAVE*
+
+TIP: Feel free to run the whole workflow again. Every step should be idempotent and should not add or change anything defined in your Job Templates.
+
+==== Add the Application Deployment Job 
+
+So far you have a Workflow that:
+
+* Creates a VPC
+* Deploys two instances
+* Makes the new instances known to Ansible for further tasks
+
+Your Playbook repository contains Playbooks that deploy a simple two-tier (webserver and database) application to your instances. You have configured Job Templates and added them to the Workflow already, so use your new automation skills to:
+
+* Create a Job Template for the database deployment:
+** Name it *iacstart_install_database* that uses the *install_database.yml* Playbook.
+** Make it use the inventory *iacstart*
+** For credentials use *AWS SSH*
+** Make sure it only runs on the database instance, limit the scope by setting *LIMIT* to `tag_Name_iacstart_db`.
+
+* Create a Job Template for the final application deployment:
+** Name it *iacstart_install_application* that uses the *install_sinatra.yml* Playbook.
+** Make it use the inventory *iacstart*
+** For credentials use *AWS SSH*
+** Make sure it only runs on the database instance, limit the scope by setting *LIMIT* to `tag_Name_iacstart_web`.
+
+TIP: You can copy the instance deploy Playbook and adapt the settings.
+
+* Add the two new Job Template as new nodes to your Workflow, first the database installation and then the application installation Playbook.
+
+=== Run the complete Workflow
+
+It's time to test the complete workflow. You could either delete the objects you have created so far in test runs:
+
+* Go to the AWS web console
+* Terminate the instances in the EC2 Service view
+* Delete the `iacstart` VPC in the VPC Service view
+
+Or just run the workflow again. Your decision.
+
+TIP: Infrastructure as Code done right is idempotent
+
+To test your deployment, get the IP address of your webserver from the inventory in Ansible Tower or from the AWS console in the EC2 instance details. Then just open it in your browser.
+
+=== Challenge: Associate Elastic IP
+
+Until now your instances have an IP address reachable from the Internet, but this address is not static, meaning it'll change after reboots. *Not good for a web shop*. If you remember you added the Playbook `allocate_eip.yml` as the first test of your setup and allocated an Elastic (means fixed in AWS lingo) IP to your account.
+
+Now you have to associate the IP with your webserver. This is for you to do on your own. A couple of hints:
+
+* Use the Github.com web UI to create the new Playbook `associate_eip.yml` (*Create new file* button, *Commit new file* to "save"). Here is a template for the task, the *ip*, *region* and *instance_id* parameters have to use your values, make them configurable through variables.
+
+----
+- name: associate an elastic IP with an instance
+  ec2_eip:
+    instance_id: <CHANGE TO VARIABLE>
+    ip: <CHANGE TO VARIABLE>
+    region: <CHANGE TO VARIABLE>
+    allow_reassociation: yes
+----
+
+* For a complete example have a look at the existing `allocate_eip.yml` Playbook.
+
+TIP: Remember variable are done like this in Ansible Playbooks: `"{{...}}"`
+
+* Make the values configurable by three variables (to be put in the *EXTRA VARIABLES* field of the Tower Job Template)
+* Look up the *instance_id* and *ip* in the AWS console, make sure you know the name of the *region*.
+* Create a Job Template in Ansible Tower that uses the new Playbook and sets the *EXTRA VARIABLES*.
+* Run the Job Template.
+
+WARNING: This sprint counts as successfully finished when your web shop is reachable under the AWS Elastic IP!
