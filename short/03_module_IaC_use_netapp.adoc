@@ -3,7 +3,9 @@
 :nfs-share: 10.10.10.4:/elated-fervent-engelbart
 
 = ToDo
+
 GR: Create job template in preperation
+
 GR: Change use_existing_vpc playbook to lookup subnet_id and change documentation in long game
 
 

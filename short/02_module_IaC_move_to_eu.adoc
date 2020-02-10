@@ -1,7 +1,11 @@
 = ToDo
+
 CS: Define the workflow variables
+
 CS: Change the job template to use ssh key europe
+
 CS: Change inventory
+
 GR: Change job template delete to europe
 
 
