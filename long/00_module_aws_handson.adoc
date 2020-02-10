@@ -1,8 +1,11 @@
-:git: https://github.com/iacstart/nodejs_sample.git 
+
+
+:icons: font
+:git: https://github.com/iacgame/nodejs_sample.git 
 
 = IaCStart - Let's deploy your first app on AWS
 
-Before we start with our Infrastructure-as-Code game, you will provision a small application manual. 
+Before we start with our Infrastructure-as-Code game, you will provision a small application manually. 
 
 == Let's get started
 
@@ -13,7 +16,7 @@ TIP: Remember to have fun!
 
 == Description of the target environment
 
-You will need to build to virtual servers. 
+You will need to build virtual servers. 
 Here are the specifications of the servers:
 
 === Web server:
@@ -41,7 +44,7 @@ Everything you'll do during this game is about deploying cloud-based infrastruct
 
 * Open the AWS console https://console.aws.amazon.com/
 * Log-in with the provided Credentials
-* Create s new user to work with
+* Creates new user to work with
 ** Open the IAM-Console (Service Menu on the top)
 ** Select on the left site the User menu
 ** Provide a username of your choice
@@ -53,8 +56,8 @@ Everything you'll do during this game is about deploying cloud-based infrastruct
 ** If everything looks right, click the "Create User" Button
 * After the user is successfully created, a result page will be shown, where you can download the access key for later use. 
 To do so, click on the "Download .csv" button and store the file on your machine.
-* Logout from the AWS console and login again with the created user. 
-* Verify that you are connected to the *USA Ost (Nord-Virginia) us-east-1* Region in the top right corner. If not, change to that region.
+* Logout from the AWS console and log in again with the created user. 
+* Verify that you are connected to the *USA Ost (Northern-Virginia) us-east-1* Region in the top right corner. If not, change to that region.
 
 === Create a VPC
 
@@ -62,7 +65,7 @@ TIP: In your account is a default VPC in each region. For your deployment, we wi
 
 * The VPC is your virtual data center, where all the resources will be located. 
 * The VPC boundary is the network. 
-* Please us the following CIDR for your VPC 10.4.0.0/20
+* Please use the following CIDR for your VPC 10.4.0.0/20
 
 === Create a Subnet within the VPC
 
@@ -71,15 +74,15 @@ Within the VPC, you need to create Subnets to connect your systems later on.
 * Select Subnets in the VPC Console and create one subnet in the new VPC with the CIDR 10.4.0.0/24
 * After you have created the subnet, change the "auto-assign IP settings" to enable the assignment of public IP addresses. 
 
-=== Internet Gateway and and routing
+=== Internet Gateway and routing
 
-* To enable the access from the internet to the systems in this subnet you also need to create a internet gateway which needs to be connected to the new VPC.
+* To enable access from the internet to the systems in this subnet you also need to create an internet gateway that needs to be connected to the new VPC.
 * After you have created the Gateway to the internet, you also need to configure the default route (CIDR 0.0.0.0/0) in the routing table of the subnet to use the gateway. 
 
-=== Create the ssh key pair for the access to the linus servers
+=== Create the ssh key pair for access to the Linux servers
 
-* To log-in into new provisioned servers, you need to provide a public ssh-key during the deployment where you have the private key.
-* This key pair can be created in the AWS console in the EC2 dashboard where you can select "key pairs" and than "Create key pair".
+* To log-in into newly provisioned servers, you need to provide a public ssh-key during the deployment where you have the private key.
+* This key pair can be created in the AWS console in the EC2 dashboard where you can select "key pairs" and then "Create key pair".
 * Provide a name, so that you can identify the key during the later use.
 * Select pem as file format as this format is important for the later use in the game
 * When you click on "create key pair" the private key file will be downloaded
@@ -92,7 +95,7 @@ WARNING: This private key file will always be needed to access a server on AWS a
 
 === Configure the database server
 
-* Connect to server via ssh
+* Connect to the server via ssh
 
 ** For macOS
 *** Open the terminal
@@ -105,9 +108,9 @@ WARNING: This private key file will always be needed to access a server on AWS a
 https://docs.aws.amazon.com/de_de/AWSEC2/latest/UserGuide/putty.html 
 
 
-* Install mongodb
+* Install MongoDB
 
-Add the mongodb repository to the system. To do so, please create a new file */etc/yum.repos.d/mongodb-org-4.2.repo* and add the following content the file.
+Add the MongoDB repository to the system. To do so, please create a new file */etc/yum.repos.d/mongodb-org-4.2.repo* and add the following content the file.
 
 ----
 [mongodb-org-4.2]
@@ -122,7 +125,7 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
 sudo yum install -y mongodb-org
 ----
 
-* Configure mongodb to bind to any IP
+* Configure MongoDB to bind to any IP
 
 ----
 sudo vi /etc/mongod.conf
@@ -130,17 +133,17 @@ sudo vi /etc/mongod.conf
 
 Change bindIP to *0.0.0.0*
 
-* Start mongodb
+* Start MongoDB
 
 ----
 sudo systemctl start mongod
 ----
 
-=== Configure the web server
+=== Configure the webserver
 
 * Connect to the web server via ssh
 
-To run the web application some packages and configuration are need. 
+To run the web application some packages and configurations are needed. 
 
 * Install git
 
@@ -150,9 +153,10 @@ sudo yum install git
 
 * Clone repo
 
+[subs="attributes"]
 ----
 cd /opt
-sudo git clone https://github.com/iacstart/nodejs_sample.git
+sudo git clone {git}
 cd nodejs_sample
 ----
 
@@ -178,11 +182,11 @@ Change the database server IP address to the private IP address of your database
 * Start the app
 
 Test that the app is running from the command line *sudo npm start*
-Open the public URL of the web server with your local browser to check the web site
+Open the public URL of the webserver with your local browser to check the web site
 
 * BONUS
 
-Ensure that the web server application is running after with as deamon with a enabled service. 
+Ensure that the webserver application is running after with as daemon with an enabled service. 
 
 == Review what you have done so far.
 
@@ -195,7 +199,7 @@ Ensure that the web server application is running after with as deamon with a en
 
 In the next sprints of the game, you will deploy the resources with Ansible. Therefore please clean up your AWS account.
 
-* Open the EC2 console and select the both running instances and set the *Instance state* to *Terminate* and wait until both instances are terminated.
+* Open the EC2 console and select both running instances and set the *Instance state* to *Terminate* and wait until both instances are terminated.
 * Open the VPC console and select your VPC and delete the VPC
 
 WARNING: Do not delete the key pair. This will be needed in the next sprints. 

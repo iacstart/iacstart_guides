@@ -1,3 +1,5 @@
+:icons: font
+
 :git: https://github.com/iacgame/aws_playbooks.git
 
 = IaCStart - So it Begins
@@ -61,7 +63,7 @@ In the next steps, you need to add the SSH private key to Ansible Tower, so that
 ** Add new Credentials by clicking the *+* button
 ** Fill in the *NAME* field with *AWS SSH* 
 ** In the *CREDENTIAL TYPE* Field, click the magnifying glass and select *Machine* as type
-** Open the *<ssh-access.pem>* file you downloaded earlier (the name might be different), which you have downloaded during sprint 0, with a text editor and copy the *whole* content.
+** Open the *<ssh-access.pem>* the file you downloaded earlier (the name might be different), which you have downloaded during sprint 0, with a text editor and copy the *whole* content.
 ** Paste the content into the *SSH PRIVATE KEY* field. 
 ** Save the credentials
 

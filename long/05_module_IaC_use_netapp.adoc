@@ -1,3 +1,5 @@
+:icons: font
+
 :nfs-share: 10.10.10.4:/elated-fervent-engelbart
 
 = IaCStart - Scale the frontend to cope with the load
@@ -6,16 +8,16 @@ The marking department has changed the process to ship new images for the web si
 
 The images will now be provided on a central NFS Storage, which will utilize the Cloud Volume Services from NetApp on AWS.
 
-The CVS is available from the central AWS team. Due to the architecture of this game environment, you need to utilize a other VPC and Subnet, which we have already deployed to your account. 
+The CVS is available from the central AWS team. Due to the architecture of this game environment, you need to utilize another VPC and Subnet, which we have already deployed to your account. 
 
 So you need to destroy your current environment and redeploy the whole infrastructure into the subnet, which we have pre-provided for this game environment. 
 
 * Terminate your existing instances and delete the VPC
 * Change the playbook in the *iac_create_vpc* job template to use the *use_existing_vpc* playbook.
-* Lookup the *Subnet ID* in the VPC console of the target subnet. You can identify the subnet on the network CIDR, which starts with 10.128..
+* Lookup the *Subnet ID* in the VPC console of the target subnet. You can identify the subnet on the network CIDR, which starts with 10.128...
 * Change the *iacstart* Workflow in the Ansible Tower
 * Remove the following variables from the workflow: vpc, vpc_cidr, subnet_cidr
-* Add the the following variables to the workflow:
+* Add the following variables to the workflow:
 vpc_id: "vpc-0eaea42a6ae519aa7"
 vpc_subnet_id: as looked-up above
 
@@ -34,5 +36,5 @@ TIP: You can copy the instance deploy Playbook and adapt the settings.
 
 Now you can launch the workflow to deploy the infrastructure to the shared VPC.
 
-After the workflow is completed successfully, you need to assign your *elastic IP* to the new webserver, so that the monitoring system can count again your points. 
+After the workflow is completed successfully, you need to assign your *elastic IP* to the new web server, so that the monitoring system can count again your points. 
 

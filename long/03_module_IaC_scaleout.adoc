@@ -1,8 +1,10 @@
+:icons: font
+
 = IaCStart - Scale the frontend to cope with the load
 
-The marketing department is planing a big campaign to promote your new shop. To cope with the expected load and to increase the availability of the shop, you need to deploy more web servers and to put a load balancer in front of the web servers. 
+The marketing department is planning a big campaign to promote your new shop. To cope with the expected load and to increase the availability of the shop, you need to deploy more web servers and to put a load balancer in front of the web servers. 
 
-The IP-Address of the shop shouldn't change during this operations to reduce the interference with the monitoring and DNS teams. 
+The IP-Address of the shop shouldn't change during these operations to reduce the interference with the monitoring and DNS teams. 
 
 
 
