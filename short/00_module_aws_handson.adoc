@@ -1,4 +1,7 @@
 :git: https://github.com/iacstart/nodejs_sample.git 
+= ToDo
+CS: IP in AWS finden und kommunizieren
+
 
 = IaCStart - Let's deploy your first app on AWS
 
