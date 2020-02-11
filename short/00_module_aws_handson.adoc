@@ -67,7 +67,7 @@ Within the VPC, you need to create Subnets to connect your systems later on.
 * To log-in into newly provisioned servers, you need to provide a public ssh-key during the deployment where you have the private key.
 * This key pair can be created in the AWS console in the EC2 dashboard where you can select "key pairs" and then "Create key pair".
 * Provide a name, so that you can identify the key during the later use.
-* Select pem as file format as this format is important for the later use in the game
+* Select ppk as file format as this format is important for the later use in the game
 * When you click on "create key pair" the private key file will be downloaded
 
 WARNING: This private key file will always be needed to access a server on AWS and can't be download later. So store the file in a secure place.
@@ -86,7 +86,7 @@ WARNING: This private key file will always be needed to access a server on AWS a
 *** Connect to the public IP of the server with the user ec2-user (ssh -i "path to your pem file" ec2-user@"Public IP of the server")
 
 ** For Windows 
-*** Use putty to connect to the server. You need to transform the pem file in a putty format. 
+*** Use putty to connect to the server. 
 *** Details can be found here: 
 https://docs.aws.amazon.com/de_de/AWSEC2/latest/UserGuide/putty.html 
 
