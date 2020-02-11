@@ -1,7 +1,5 @@
 = ToDo
 
-CS: Environment Description
-
 GR: Delete playbook mit Template
 
 MD: Playbook App deployment anpassen dass der mount geprüft wird.  
@@ -12,21 +10,12 @@ CS: CSV mit den Access von allen 10 Accounts
 
 = IaCStart - Initial Web Shop Deployment
 
-By now you should have access to your 
+We have prepared some infrastructure components for this sprint in advanced to speed up the completion. 
 
-* AWS account and web console
-* Github account
-* Ansible Tower web interface
+We have installed an Ansible Tower, which will the central automation platform where all the automation tasks are stored and executed. 
+Beside the the Ansible Tower we have provisioned a central GIT repository on GitHub to store all playbook which will be used in the Ansible Tower tasks. Git is a commonly used version control system for source code like the playbooks. 
 
-And the following tasks should have been completed:
-
-* AWS user and access key/SSH key have been created
-* Github repos with IaC Playbooks and application code have been cloned into your team account
-* Ansible Tower is configured with your AWS credentials and Github repositories
-
-WARNING: If not please don't proceed and ask for assistance!
-
-WARNING: The revenue from the shop will count for points when your shop is available under the *AWS Elastic IP* you have communicated in the last sprint.
+In addition to the playbooks, we have also stored the credentials to access AWS in the Ansible Tower secret store. There are two kinds of credentials, the access key to authenticate against the global AWS API and ssh key-pairs to authenticate against the linux server. The SSH key-pair is stored within the region of AWS and could be different. 
 
 *So it's time to get your web shop deployed!*
 
