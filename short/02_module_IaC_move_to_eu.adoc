@@ -1,3 +1,5 @@
+:icons: font
+
 = ToDo
 
 CS: Define the workflow variables

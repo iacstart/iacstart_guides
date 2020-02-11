@@ -1,4 +1,5 @@
 :icons: font
+
 :git: https://github.com/iacstart/nodejs_sample.git 
 
 = IaCStart - Let's deploy your first app on AWS
@@ -188,7 +189,8 @@ In the next sprints of the game, you will deploy the resources with Ansible. The
 
 To claim your points for the successful completed sprint, please log-in to the AWS Console and open the EC2 Dashboard. 
 Select the webserver instance and lookup the public IP-Address of the instance.
-Communicate the IP-Address to the facilitated, so that he can prove the completion.
+Communicate the IP-Address to the facilitator, so that he can prove the completion.
 The first team will get 10 points for the completion, the next 9 and so on. 
 
+WARNING: This sprint counts as successfully finished when your web shop is reachable under the IP and the facilitator has proven the availability!
 

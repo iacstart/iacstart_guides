@@ -1,3 +1,5 @@
+:icons: font
+
 = ToDo
 
 GR: Delete playbook mit Template
@@ -278,32 +280,11 @@ Or just run the workflow again. Your decision.
 
 TIP: Infrastructure as Code done right is idempotent
 
-To test your deployment, get the IP address of your webserver from the inventory in Ansible Tower or from the AWS console in the EC2 instance details. Then just open it in your browser.
+= Claim your points
 
-=== Challenge: Associate Elastic IP
+To claim your points for the successful completed sprint, please log-in to the AWS Console and open the EC2 Dashboard. 
+Select the webserver instance and lookup the public IP-Address of the instance.
+Communicate the IP-Address to the facilitator, so that he can prove the completion.
+The first team will get 10 points for the completion, the next 9 and so on. 
 
-Until now your instances have an IP address reachable from the Internet, but this address is not static, meaning it'll change after reboots. *Not good for a web shop*. If you remember you added the Playbook `allocate_eip.yml` as the first test of your setup and allocated an Elastic (means fixed in AWS lingo) IP to your account.
-
-Now you have to associate the IP with your webserver. This is for you to do on your own. A couple of hints:
-
-* Use the Github.com web UI to create the new Playbook `associate_eip.yml` (*Create new file* button, *Commit new file* to "save"). Here is a template for the task, the *ip*, *region* and *instance_id* parameters have to use your values, make them configurable through variables.
-
-----
-- name: associate an elastic IP with an instance
-  ec2_eip:
-    instance_id: <CHANGE TO VARIABLE>
-    ip: <CHANGE TO VARIABLE>
-    region: <CHANGE TO VARIABLE>
-    allow_reassociation: yes
-----
-
-* For a complete example have a look at the existing `allocate_eip.yml` Playbook.
-
-TIP: Remember variable are done like this in Ansible Playbooks: `"{{...}}"`
-
-* Make the values configurable by three variables (to be put in the *EXTRA VARIABLES* field of the Tower Job Template)
-* Look up the *instance_id* and *ip* in the AWS console, make sure you know the name of the *region*.
-* Create a Job Template in Ansible Tower that uses the new Playbook and sets the *EXTRA VARIABLES*.
-* Run the Job Template.
-
-WARNING: This sprint counts as successfully finished when your web shop is reachable under the AWS Elastic IP!
+WARNING: This sprint counts as successfully finished when your web shop is reachable under the IP and the facilitator has proven the availability!
