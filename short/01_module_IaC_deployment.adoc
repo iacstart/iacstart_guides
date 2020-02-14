@@ -8,7 +8,8 @@ MD: Playbook App deployment anpassen dass der mount geprüft wird.
 
 GR: Prepare Tower Environment with Template and Accounts 
 
-GR: Check Module 02 for the SSH Key name and use them in your code or change the description in module 02. 
+GR: Check Module 02 for the SSH Key name and use them in your code or change the description in module 02.
+GR: Generate SHH keypair and upload to US and EU 
 
 = IaCStart - Initial Web Shop Deployment
 

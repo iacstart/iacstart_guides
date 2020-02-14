@@ -8,16 +8,10 @@ GR: Change job template delete to europe
 
 Due to a new regulation requirement it is not longer allowed to run the shop in the US. Therefore, you need to *delete the resources in the US* and to *deploy the shop into AWS region "eu-central-1"*. Because your complete application deployment is automated, this should be straight forward. A couple of things have to be taken care of: 
 
-* SSH key pairs are created and stored in the region. 
-** Therefore, you need to change the used credentials in the Job Templates which need to connect via SSH to the EC2 VM. These are the Job Templates *iacstart_install_database* and *iacstart_install_application*
-** Open each Job Template in Ansible Tower and change the Credentials from *AWS SSH US* to *AWS SSH EU*
-* A couple more variables are region dependent, including the SSH key name you have to change four variables in the Workfow definition.
-
 ----
 region: "eu-central-1"
 aws_zone: "eu-central-1a"
 ami_id: "ami-00f69856ea899baec"
-ssh_key: "AWS SSH EU"
 ----
 
 * The dynamic inventory you created before points to the wrong region and needs to be changed
