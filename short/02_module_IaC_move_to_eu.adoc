@@ -6,17 +6,29 @@ GR: Change job template delete to europe
 
 = IaCStart - Let's move to good old europe
 
-Due to a new regulation requirement it is not longer allowed to run the shop in the US. Therefore, you need to *delete the resources in the US* and to *deploy the shop into AWS region "eu-central-1"*. Because your complete application deployment is automated, this should be straight forward. A couple of things have to be taken care of: 
+Due to a new regulation requirement it is no longer allowed to run the shop in the US. Therefore, you need to *delete the resources in the US* and to *deploy the shop into AWS region Europe (Frankfurt), shortname eu-central-1*. Because your complete application deployment is automated, this should be straight forward. A couple of things have to be taken care of, though: 
 
-----
-region: "eu-central-1"
-aws_zone: "eu-central-1a"
-ami_id: "ami-00f69856ea899baec"
-----
+* First and foremost you have to point the workflow to the new region.
+* The AMI IDs are region-specific in AWS, so you have to look up the AMI ID again.
 
-* The dynamic inventory you created before points to the wrong region and needs to be changed
+So here are your tasks:
 
-TIP: You've done all of this already, refer back to the sprint guides. 
+* First look up the AMI ID like you have done during the last sprint, only now for the new region. 
+* In the *EXTRA VARIABLES* of your workflow *iacstart* change
+** *region* to *eu-central-1*
+** *aws_zone* to *eu-central-1a*
+** Change *ami_id* to the ID you looked up
+
+TIP: *aws_zone* is one of the availability zones AWS provides in every region.
+
+And one last thing:
+
+* The dynamic inventory that was created for you points to the wrong region, too.  
+* To change it open *Inventories->iacstart*, click the *SOURCES* button and edit the *iacstartaws* source.
+* Find the *REGIONS* field, delete the old region and choose the correct new region from the drop-down
+* *SAVE*
+
+When you are done with these steps just run the workflow again.
 
 = Claim your points
 
