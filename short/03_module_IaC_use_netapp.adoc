@@ -11,37 +11,31 @@ GR: Change use_existing_vpc playbook to lookup subnet_id and change documentatio
 
 = IaCStart - Scale the frontend to cope with the load
 
-The marking department has changed the process to ship new images for the web site. At the moment the images are served from an external service, which isn't reliable enough. 
+The marketing department has changed the process to ship new images for the web site. At the moment the images are served from an external service, which isn't reliable enough. 
 
-The images will now be provided on a central NFS Storage, which will utilize the Cloud Volume Services from NetApp on AWS.
+The images will now be provided on a central NFS Storage, which will utilize the *Cloud Volume Services* from *NetApp* on AWS.
 
 The CVS is available from the central AWS team. Due to the architecture of this game environment, you need to utilize another VPC and Subnet, which we have already deployed to your account. 
 
-So you need to destroy your current environment and redeploy the whole infrastructure into the subnet, which we have pre-provided for this game environment. 
+So you need to destroy your current environment and then redeploy the whole infrastructure into the NetApp subnet, which we have pre-created. 
 
 * Terminate your existing instances and delete the VPC
-* Change the playbook in the *iac_create_vpc* job template to use the *use_existing_vpc* playbook.
+* Change the playbook in the *iac_create_vpc* job template to use the *use_existing_vpc.yml* playbook.
 * Lookup the *Subnet ID* in the VPC console of the target subnet. You can identify the subnet on the network CIDR, which starts with 10.128...
-* Change the *iacstart* Workflow in the Ansible Tower
-* Remove the following variables from the workflow: vpc, vpc_cidr, subnet_cidr
-* Add the following variables to the workflow:
-vpc_id: "vpc-0eaea42a6ae519aa7"
-vpc_subnet_id: as looked-up above
+* Change the *EXTRA VARIABLES* of the *iacstart* Workflow in the Ansible Tower :
+** Remove the following variables from the workflow: *vpc, vpc_cidr, subnet_cidr*
+** Add the following variable:
+*vpc_id: "vpc-0eaea42a6ae519aa7"*, the id should be as looked-up above
 
-Now you need to create a new job template with the playbook *mount_nfs*
+Now you need to add a job template to the workflow to make the application use the NetApp storage via NFS. Take this as a challenge:
 
-* Create a Job Template for the final application deployment:
-** Name it *iacstart_mount_nfs* that uses the *mount_nfs.yml* Playbook.
-** Make it use the inventory *iacstart*
-** For credentials use *AWS SSH*
-** Make sure it only runs on the database instance, limit the scope by setting *LIMIT* to `tag_Name_iacstart_web`.
-** Tick the option *ENABLE PRIVILEGE ESCALATION*
-
-TIP: You can copy the instance deploy Playbook and adapt the settings.
-
-* The new job template needs to be added to the workflow between the *iac_create_instance* and the *iacstart_install_database*
+* The job template *iacstart_mount_nfs* needs to be added to the workflow between the *iacstartaws* inventory sync and the *iacstart_install_database* steps.
 
 Now you can launch the workflow to deploy the infrastructure to the shared VPC.
 
-After the workflow is completed successfully, you need to assign your *elastic IP* to the new web server, so that the monitoring system can count again your points. 
+= Claim your points
+
+To claim your points for the successful completed sprint, please log-in to the AWS Console and open the EC2 Dashboard. 
+Select the webserver instance and lookup the public IP-Address of the instance.
+Communicate the IP-Address to the facilitator, so that he can prove the completion.
 
