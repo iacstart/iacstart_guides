@@ -54,11 +54,11 @@ Now the Job Templates need to be chained together, that's what you are going to 
 
 As already discussed during the introduction the first resource you need in AWS (and other clouds) is a VPC to separate your infrastructure components from other stuff probably running in your cloud environment. So let's start by autmomating the creation of the VPC.
 
-The Job Template *iac_create_vpc* will do this for you when provided the proper parameters. 
+The Job Template *iac_create_vpc* will do this for you when provided with the proper parameters. 
 
 ==== Add Job Template to Workflow
 
-Now add the Job Template to the Workflow you created above using the Workflow Visualizer:
+Add the Job Template to the Workflow you created above using the Workflow Visualizer:
 
 * In Tower's web interface open your Workflow Template by going to *Templates* and then clicking your workflow template name.
 * Click the *WORKFLOW VISUALIZER* button
@@ -82,11 +82,32 @@ You have:
 
 ==== Parameterize and Run the Workflow
 
-You could now run the Workflow (it would of course only execute the first Playbook) but something is missing: Have a look at the `create_vpc_complete.yml` Playbook in Github. In the Ansible-code are a good number of *{{ ... }}* constructs. These are variables which have to be filled with content, making the Playbook more versatile without always having to change the code itself.
+You could now run the Workflow (it would of course only execute the first Playbook) but something is missing. Have a look at the `create_vpc_complete.yml` Playbook, here is the first task:
 
-There are multiple ways to supply variable content to a Job Template (Playbook), in our case put it into the Workflow definition in Tower:
+----
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
 
-* In the Tower web UI open the Workflow configuration *iacstart* in Tower
+  tasks:
+  - name: Create AWS virtual private cloud (VPC)
+    ec2_vpc_net:
+      name: "{{ vpc }}_vpc"
+      cidr_block: "{{ vpc_cidr }}"
+      region: "{{ region }}"
+      dns_support: yes
+      dns_hostnames: yes
+      tenancy: default
+      state: "{{ state }}"
+    register: ec2_vpc_net_return
+----
+
+In the Ansible-code are a good number of *{{ ... }}* constructs. These are variables which have to be filled with content, making the Playbook more versatile without always having to change the code itself.
+
+There are multiple ways to supply variable content to a Job Template (Playbook), in this case put it into the Workflow definition in Tower:
+
+* In Tower open the Workflow *iacstart*
 * Find the text field *EXTRA VARIABLES*
 * Add the following variable definitions:
 
@@ -109,7 +130,7 @@ WARNING: Make sure to keep the *---* in place as they are! This tells Tower the 
 * Go to *Templates* and click the "Rocket" icon for your workflow to launch it.
 * Watch it run, you can get detailed information by clicking the *DETAILS* button of the workflow node. The easiest way back to the Workflow output is the browsers back button.
 
-Your Workflow should have created a new VPC, check in the AWS console. Now try to run the workflow again. As your IaC automation is *idempotent* it describes of how "things should be" regardless of how many times you run it.
+Your Workflow should have created a new VPC, check in the AWS console by switching to the *VPC* service. Now try to run the workflow again. As your IaC automation is *idempotent* it describes of how "things should be" regardless of how many times you run it.
 
 === Create AWS Instances in your VPC
 
@@ -119,7 +140,7 @@ A Job Template to deploy instances in AWS already exists in your Tower, but agai
 
 * The *Instance Type*, defining the sizing of the VM (Memory, CPUs etc)
 * An *AMI ID*, basically what image/operating system to use.
-* What *SSH Key* to inject into the instance, so Ansible can later connect to it using SSH. The key has already been created as *sshkey* in the AWS region.
+* What *SSH Key* to inject into the instance, so Ansible can later connect to it using SSH. The key has already been created as *sshkey* in AWS.
 
 ==== Find the Instance Size
 
@@ -140,7 +161,7 @@ There are multiple ways to find an AMI suitable for your application. In our sce
 * Find the proper AMI ID to pass to the Playbook
 * Make sure the AMI was created from a reliable source
 
-Finding the proper AMI ID can be tricky, here take this road:
+Finding the proper AMI ID can be tricky at first, here take this road:
 
 * Go to the AWS Marketplace *https://aws.amazon.com/marketplace*
 * On the overview page search *Ubuntu 18.04*
@@ -149,7 +170,7 @@ Finding the proper AMI ID can be tricky, here take this road:
 * If an *Accept Terms* pops up, click it and wait until the *Continue to Configuration* becomes active.
 * Check in the image details if it is available in the instance size you selected earlier (only one of the two sizes will be).
 * Now click the *Continue to Configuration* button (bear with me, nearly there...)
-* AMI IDs are region-specific, on the next page choose *US East (N. Virginia)* as *Region* and, lo and behold, you'll get the AMI ID to the right.
+* AMI IDs are region-specific, on the next page make sure *US East (N. Virginia)* is set as *Region* and, lo and behold, you'll get the AMI ID to the right.
 * Copy the ID
 
 NOTE: Even if this feels tiresome for now, remember you would have to go through these steps only once, after your automation is finished you can just execute it again and again.
@@ -158,7 +179,7 @@ NOTE: Even if this feels tiresome for now, remember you would have to go through
 
 Now you are ready to extend your workflow by adding the Job Template for creating instances. You have done the required steps already when integrating the VPC creation into the workflow. Here is what you have to do:
 
-* Extend your workflow using the *WORKFLOW VISUALIZER* to add a new node (hover the mouse pointer over the existing node and click the green *+* icon) after the node which creates the VPC. Configure the node to run the *iac_create_instance* Job Template.
+* In Tower extend your workflow using the *WORKFLOW VISUALIZER* to add a new node (hover the mouse pointer over the existing node and click the green *+* icon) after the node which creates the VPC. Configure the node to run the *iac_create_instance* Job Template.
 * In the *Workflow* add the following variables needed by the Playbook:
 ** Instance Type 
 ** AMI ID you found for the AMI
@@ -221,7 +242,7 @@ Your Ansible Tower contains two Job Templates that deploy a simple two-tier (web
 * *iacstart_install_database* that uses the *install_database.yml* Playbook.
 * *iacstart_install_application* that uses the *install_sinatra.yml* Playbook.
 
-TIP: You might wonder how Tower knows what Node to run the Job on, the database should get instaled on the DB instance and the application should be installed on the web instance. This is limited by setting *LIMIT* to `tag_Name_iacstart_web` or respectively to `tag_Name_iacstart_db`.
+TIP: You might wonder how Tower knows what Node to run the Job on, the database should get installed on the DB instance and the application should be installed on the web instance. This is limited by setting *LIMIT* to `tag_Name_iacstart_web` or respectively to `tag_Name_iacstart_db`.
 
 Add the two new Job Template as new nodes to your Workflow, first the database installation and then the application installation.
 
