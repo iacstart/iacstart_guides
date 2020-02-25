@@ -8,27 +8,39 @@ The marketing department has changed the process to ship new images for the web 
 
 The images will now be provided on a central NFS Storage, which will utilize the *Cloud Volume Services* from *NetApp* on AWS.
 
-The CVS is available from the central AWS team. Due to the architecture of this game environment, you need to utilize another VPC and Subnet, which we have already deployed to your account. 
+The CVS is available from the central AWS team. Due to the architecture of our infrastructure, you need to utilize another VPC and Subnet, which we have already deployed to your account. 
 
-So you need to destroy your current environment and then redeploy the whole infrastructure into the NetApp subnet, which we have pre-created. 
+You need to destroy your current environment, make some changes to the workflow and then redeploy the whole infrastructure into the NetApp subnet, which we have pre-created. 
 
-* Terminate your existing instances and delete the VPC
-* Change the playbook in the *iac_create_vpc* job template to use the *use_existing_vpc.yml* playbook.
-* Lookup the *Subnet ID* in the VPC console of the target subnet. You can identify the subnet on the network CIDR, which starts with 10.128...
-* Change the *EXTRA VARIABLES* of the *iacstart* Workflow in the Ansible Tower :
-** Remove the following variables from the workflow: *vpc, vpc_cidr, subnet_cidr*
-** Add the following variable:
-*vpc_id: "vpc-0eaea42a6ae519aa7"*, the id should be as looked-up above
+* Terminate your existing instances:
+** In the AWS console open *Services->EC2*
+** In the *EC2 Dashboard* click *Running Instances*
+** Check both instances and from the *Actions* drop-down choose *Instance State->Terminate*
+** To watch the instances being terminated you have to refresh the console (refresh icon to the upper right).
+* Change the automation configuration  in Tower:
+** Open *Templates->iac_create_vpc*. Then change the Playbook to use the *use_existing_vpc.yml*, click *SAVE*.
+** Open the *iacstart* workflow and change the *EXTRA VARIABLES*:
+*** Remove: *vpc, vpc_cidr, subnet_cidr*
+*** Add:
+*vpc_id: "vpc-0eaea42a6ae519aa7"*
 
-Now you need to add a job template to the workflow to make the application use the NetApp storage via NFS. Take this as a challenge:
+And as last step you need to add a job template to the workflow to make the application use the NetApp storage via NFS. 
 
 * The job template *iacstart_mount_nfs* needs to be added to the workflow between the *iacstartaws* inventory sync and the *iacstart_install_database* steps.
 
+TIP: Click the green connecting line to insert a new node.
+
 Now you can launch the workflow to deploy the infrastructure to the shared VPC.
 
-== Claim your points
+WARNING: Wait until the last step becomes green again.
 
-To claim your points for the successful completed sprint, please log-in to the AWS Console and open the EC2 Dashboard. 
-Select the webserver instance and lookup the public IP-Address of the instance.
-Communicate the IP-Address to the facilitator, so that he can prove the completion.
+== Access your Webshop
 
+To access the shop:
+
+* Log-in to the AWS Console and open the EC2 Dashboard (Services->EC2). 
+* Make sure you are in region *Europe (Frankfurt) eu-central-1* (upper right side in the AWS console)
+* Select the webserver instance *iacstart_web* and lookup the public IP Address of the instance.
+* Copy the IP address, open a new browser tab, paste and open it.
+
+*Now you are open for business in Europe!*
