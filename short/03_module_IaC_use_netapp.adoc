@@ -26,7 +26,7 @@ Now you need to add a job template to the workflow to make the application use t
 
 Now you can launch the workflow to deploy the infrastructure to the shared VPC.
 
-= Claim your points
+== Claim your points
 
 To claim your points for the successful completed sprint, please log-in to the AWS Console and open the EC2 Dashboard. 
 Select the webserver instance and lookup the public IP-Address of the instance.

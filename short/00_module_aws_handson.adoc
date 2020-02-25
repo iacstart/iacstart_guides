@@ -185,7 +185,7 @@ In the next sprints of the game, you will deploy the resources with Ansible. The
 * Open the EC2 console and select both running instances and set the *Instance state* to *Terminate* and wait until both instances are terminated.
 * Open the VPC console and select your VPC and delete the VPC
 
-= Claim your points
+== Claim your points
 
 To claim your points for the successful completed sprint, please log-in to the AWS Console and open the EC2 Dashboard. 
 Select the webserver instance and lookup the public IP-Address of the instance.
