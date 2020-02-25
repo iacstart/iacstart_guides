@@ -227,7 +227,7 @@ Or just run the workflow again. Your decision.
 
 TIP: Again, Infrastructure as Code done right is idempotent
 
-= Claim your points
+== Claim your points
 
 To claim your points for the successful completed sprint, please log-in to the AWS Console and open the EC2 Dashboard. 
 Select the webserver instance and lookup the public IP-Address of the instance.
