@@ -16,23 +16,25 @@ TIP: Remember to have fun!
 == Description of the target environment
 
 You will need to build virtual servers. 
-Here are the specifications of the servers:
+Here are the specifications of the servers which you will later use in this guide:
 
 === Web server:
 
-* Instance Size: t2.micro
-* Disk Size: 10GB
 * AMI Image: Red Hat Enterprise Linux 8 (HVM), SSD Volume Type
-* Network Access: SSH, HTTP, and HTTPS from any source
-* Tag: Managed:Manual
+* Instance Size: t2.micro
+* Instance Configuration: Select your own VPC
+* Disk Size: 10GB
+* Tags: Key = Managed  Vaule = Manual
+* Security Group rules: SSH, HTTP, and HTTPS from any source (0.0.0.0/0)
 
 === Database server:
 
-* Instance Size: t2.micro
-* Disk Size: 10GB
 * AMI Image: Red Hat Enterprise Linux 8 (HVM), SSD Volume Type
-* Network Access: SSH from any source, mongodb (27017/tcp) from web servers
-* Tag: Managed:Manual
+* Instance Size: t2.micro
+* Instance Configuration: Select your own VPC
+* Disk Size: 10GB
+* Tags: Key = Managed  Vaule = Manual
+* Security Group rules: SSH from any source, mongodb (Custom TCP, Port 27017) from source 10.4.0.0/20
 
 
 == Cloud Environment on AWS 
@@ -41,14 +43,18 @@ Everything you'll do during this game is about deploying cloud-based infrastruct
 
 === Create a VPC
 
+The VPC is your virtual data center, where all the resources will be located. The VPC boundary is the network address space. 
+
 TIP: In your account is a default VPC in each region. For your deployment, we will use a new dedicated VPC.
 
 * Open the AWS console https://console.aws.amazon.com/
 * Log-in with the provided Credentials
 * Verify that you are connected to the *USA Ost (Northern-Virginia) us-east-1* Region in the top right corner. If not, change to that region.
-* The VPC is your virtual data center, where all the resources will be located. 
-* The VPC boundary is the network. 
-* Please use the following CIDR for your VPC 10.4.0.0/20
+* Click on "Create VPC" 
+** Select the VPC from the dropdown menu
+** Please use the following CIDR for your VPC 10.4.0.0/20
+
+You have now created your first virtual data center (VPC) within AWS with the network 10.4.0.0/20.
 
 === Create a Subnet within the VPC
 
@@ -57,10 +63,14 @@ Within the VPC, you need to create Subnets to connect your systems later on.
 * Select Subnets in the VPC Console and create one subnet in the new VPC with the CIDR 10.4.0.0/24
 * After you have created the subnet, change the "auto-assign IP settings" to enable the assignment of public IP addresses. 
 
+You have now created the first network in the data center and all servers in this network get a public IP address, which could be used in the internet. 
+
 === Internet Gateway and routing
 
 * To enable access from the internet to the systems in this subnet you also need to create an internet gateway that needs to be connected to the new VPC.
 * After you have created the Gateway to the internet, you also need to configure the default route (CIDR 0.0.0.0/0) in the routing table of the subnet to use the gateway. 
+
+Now your data center is connected to the internet and all servers with a public IP are reachable from the internet. 
 
 === Create the ssh key pair for access to the Linux servers
 
@@ -74,7 +84,7 @@ WARNING: This private key file will always be needed to access a server on AWS a
 
 === Create the EC2 instances for Web and DB
 
-* Open the EC2 console and launch the two server instances as described above.
+* Open the EC2 console and launch the two server instances as specified in the beginning of the document.
 
 === Configure the database server
 
