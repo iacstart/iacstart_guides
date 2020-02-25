@@ -1,16 +1,5 @@
 :icons: font
 
-= ToDo
-
-GR: Delete playbook mit Template
-
-MD: Playbook App deployment anpassen dass der mount geprüft wird.  
-
-GR: Prepare Tower Environment with Template and Accounts 
-
-GR: Check Module 02 for the SSH Key name and use them in your code or change the description in module 02.
-GR: Generate SHH keypair and upload to US and EU 
-
 = IaCStart - Initial Web Shop Deployment
 
 As this is a short version of the IACStart game some of infrastructure components and configurations for this sprint have been prepared in advance to speed up the completion. 

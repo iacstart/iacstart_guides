@@ -1,9 +1,5 @@
 :icons: font
 
-= ToDo
-
-GR: Change job template delete to europe
-
 = IaCStart - Let's move to good old europe
 
 Due to a new regulation requirement it is no longer allowed to run the shop in the US. Therefore, you need to *delete the resources in the US* and to *deploy the shop into AWS region Europe (Frankfurt), shortname eu-central-1*. Because your complete application deployment is automated, this should be straight forward. A couple of things have to be taken care of, though: 
