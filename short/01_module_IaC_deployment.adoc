@@ -2,9 +2,11 @@
 
 = IaCStart - Initial Web Shop Deployment
 
+== Introduction
+
 As this is a short version of the IACStart game some of infrastructure components and configurations for this sprint have been prepared in advance to speed up the completion. 
 
-* Ansible Tower will be the central automation platform where all the automation tasks are stored and executed. An Ansible Tower instance has been installed for each team. 
+* Ansible Tower will be the *central automation platform* where all the automation tasks are stored and executed. An Ansible Tower instance has been installed for each team. 
 * Ansible Tower has already been pre-configured with most objects you need to deploy AWS infrastructure:
 ** *Cloud Credentials* to allow Tower to connect to AWS
 ** *Credentials* (SSH keys) to login to AWS instances (Virtual Machines) you have deployed
@@ -12,13 +14,9 @@ As this is a short version of the IACStart game some of infrastructure component
 ** *Job Templates* which run the Ansible Playbooks (the automation recipes) 
 ** A *Dynamic Inventory* to get access information for instances deployed to AWS
 
-NOTE: SSH key-pairs are stored within a region of AWS. 
+=== Using Ansible Tower Workflows
 
-*So it's time to get your web shop deployed!*
-
-== Using Ansible Tower Workflows
-
-Workflows are a feature that Tower adds to Ansible Automation. You basically link separate Job Templates (Playbooks) (which could have been authored by different people) into one "Meta-Playbook".
+Your main task will be to create an Ansible Tower Workflow. Workflows are a feature that Tower adds to Ansible Automation. You basically link separate Job Templates (Playbooks) (which could have been authored by different people) into one "Meta-Playbook".
 
 We'll use a Workflow in our scenario, just remember they are part of Tower's feature set and are not part of Ansible Engine/command line. So let's get started, your Tower has been prepared with all needed configuration objects in advance, you only need to create the Workflow itself!
 
@@ -33,11 +31,11 @@ As a starting point create the Workflow without running any Playbooks via Job Te
 
 The visual workflow designer opens, hit the *CLOSE* button it for now. Your Workflow is now ready to be filled with Job Templates (that run Playbooks). 
 
+TIP: *Workflow Templates* are listed together with normal *Job Templates* under *Templates* in Ansible Tower. But they are clearly marked as *Workflow Templates*!
+
 == Add Job Templates to the Workflow
 
-Now you have to add the (already existing) Job Templates to the Workflow. But first have a look at one of the Job Templates: In the Templates section, click the *iac_create_vpc* Template to get an idea what a Job Template definition looks like. Take special note of the *PROJECT*, *PLAYBOOK* and *CREDENTIALS* settings. 
-
-Now the Job Templates need to be chained together, that's what you are going to do now.
+The following tasks will let you add (already existing) Job Templates to the Workflow. 
 
 === Create an AWS *Virtual Private Cloud* (VPC)
 
@@ -49,7 +47,8 @@ The Job Template *iac_create_vpc* will do this for you when provided with the pr
 
 Add the Job Template to the Workflow you created above using the Workflow Visualizer:
 
-* In Tower's web interface open your Workflow Template by going to *Templates* and then clicking your workflow template name.
+* In Tower's web interface open your Workflow Template by going to *Templates* and then clicking your *iacstart* workflow template.
+
 * Click the *WORKFLOW VISUALIZER* button
 * You get your empty Workflow window. 
 
@@ -66,37 +65,16 @@ Add the first Node by clicking *START*, an empty node gets added, configure it i
 You have:
 
 * Created an empty Workflow
-* Added an existing Job Template as the first step/node to your workflow
+* Added an existing Job Template as the first node (step) to your workflow
 ====
 
-==== Parameterize and Run the Workflow
+=== Parameterize and Run the Workflow
 
-You could now run the Workflow (it would of course only execute the first Playbook) but something is missing. Have a look at the `create_vpc_complete.yml` Playbook, here is the first task:
-
-----
----
-- hosts: localhost
-  connection: local
-  gather_facts: False
-
-  tasks:
-  - name: Create AWS virtual private cloud (VPC)
-    ec2_vpc_net:
-      name: "{{ vpc }}_vpc"
-      cidr_block: "{{ vpc_cidr }}"
-      region: "{{ region }}"
-      dns_support: yes
-      dns_hostnames: yes
-      tenancy: default
-      state: "{{ state }}"
-    register: ec2_vpc_net_return
-----
-
-In the Ansible-code are a good number of *{{ ... }}* constructs. These are variables which have to be filled with content, making the Playbook more versatile without always having to change the code itself.
+You could now run the Workflow (it would of course only execute the first Playbook) but something is missing. Ansible uses variables to make Playbooks more versatile without always having to change the Ansible code itself.
 
 There are multiple ways to supply variable content to a Job Template (Playbook), in this case put it into the Workflow definition in Tower:
 
-* In Tower open the Workflow *iacstart*
+* In Ansible Tower go to *Templates* and open the Workflow *iacstart*
 * Find the text field *EXTRA VARIABLES*
 * Add the following variable definitions:
 
@@ -120,6 +98,8 @@ WARNING: Make sure to keep the *---* in place as they are! This tells Tower the 
 * Watch it run, you can get detailed information by clicking the *DETAILS* button of the workflow node. The easiest way back to the Workflow output is the browsers back button.
 
 Your Workflow should have created a new VPC, check in the AWS console by switching to the *VPC* service. Now try to run the workflow again. As your IaC automation is *idempotent* it describes of how "things should be" regardless of how many times you run it.
+
+TIP: *Idempotence* is the property of certain operations in mathematics and computer science whereby they can be applied multiple times without changing the result beyond the initial application. (Wikipedia)
 
 === Create AWS Instances in your VPC
 
@@ -173,11 +153,11 @@ Now you are ready to extend your workflow by adding the Job Template for creatin
 ** Instance Type 
 ** AMI ID you found for the AMI
 ** The name of your SSH key
-* by *adding* the following to the *EXTRA VARIABLES* field of *the Workflow*:
+* by *adding* the following to the *EXTRA VARIABLES* field of *the Workflow* below the existing variables:
 
 ----
-instance_type: "<instance type>"
-ami_id: "<AMI ID>"
+instance_type: "t3.small"
+ami_id: "ami-0d03e44a2333dea65"
 ssh_key: "sshkey"
 ----
 
