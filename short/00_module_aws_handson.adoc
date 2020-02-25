@@ -12,31 +12,6 @@ Without further ado let's simply get started, you'll get more instructions on yo
 
 TIP: Remember to have fun!
 
-
-== Description of the target environment
-
-You will need to build virtual servers. 
-Here are the specifications of the servers which you will later use in this guide:
-
-=== Web server:
-
-* AMI Image: Red Hat Enterprise Linux 8 (HVM), SSD Volume Type
-* Instance Size: t2.micro
-* Instance Configuration: Select your own VPC
-* Disk Size: 10GB
-* Tags: Key = Managed  Vaule = Manual
-* Security Group rules: SSH, HTTP, and HTTPS from any source (0.0.0.0/0)
-
-=== Database server:
-
-* AMI Image: Red Hat Enterprise Linux 8 (HVM), SSD Volume Type
-* Instance Size: t2.micro
-* Instance Configuration: Select your own VPC
-* Disk Size: 10GB
-* Tags: Key = Managed  Vaule = Manual
-* Security Group rules: SSH from any source, mongodb (Custom TCP, Port 27017) from source 10.4.0.0/20
-
-
 == Cloud Environment on AWS 
 
 Everything you'll do during this game is about deploying cloud-based infrastructures. We'll use Amazon Web Services which can be accessed using APIs or with a web console. 
@@ -45,14 +20,14 @@ Everything you'll do during this game is about deploying cloud-based infrastruct
 
 The VPC is your virtual data center, where all the resources will be located. The VPC boundary is the network address space. 
 
-TIP: In your account is a default VPC in each region. For your deployment, we will use a new dedicated VPC.
+TIP: In your account is a default VPC in each region. For your deployment, we will use a new dedicated VPC which you will create now.
 
 * Open the AWS console https://console.aws.amazon.com/
 * Log-in with the provided Credentials
-* Verify that you are connected to the *USA Ost (Northern-Virginia) us-east-1* Region in the top right corner. If not, change to that region.
+* Verify that you are connected to the *USA East (Northern-Virginia) us-east-1* Region in the top right corner. If not, change to that region.
 * Click on "Create VPC" 
-** Select the VPC from the dropdown menu
-** Please use the following CIDR for your VPC 10.4.0.0/20
+* Provide a name, so that you can identify the VPC during the later use.
+* Use the following CIDR for your VPC 10.4.0.0/20
 
 You have now created your first virtual data center (VPC) within AWS with the network 10.4.0.0/20.
 
@@ -60,22 +35,32 @@ You have now created your first virtual data center (VPC) within AWS with the ne
 
 Within the VPC, you need to create Subnets to connect your systems later on. 
 
-* Select Subnets in the VPC Console and create one subnet in the new VPC with the CIDR 10.4.0.0/24
-* After you have created the subnet, change the "auto-assign IP settings" to enable the assignment of public IP addresses. 
+* Select Subnets in the VPC Console and create one subnet
+* Select your newly created VPC from the dropdown menu
+* Enter the following Information in the CIDR field: 10.4.0.0/24
+* Provide a name, so that you can identify the subnet during the later use.
+
+
+* After you have created the subnet, change the "auto-assign IP settings" to enable the assignment of public IP addresses. You will find this option in the *Actions* menu on top.
 
 You have now created the first network in the data center and all servers in this network get a public IP address, which could be used in the internet. 
 
 === Internet Gateway and routing
 
 * To enable access from the internet to the systems in this subnet you also need to create an internet gateway that needs to be connected to the new VPC.
-* After you have created the Gateway to the internet, you also need to configure the default route (CIDR 0.0.0.0/0) in the routing table of the subnet to use the gateway. 
 
+After you have created the Gateway to the internet, you also need to configure the default route (CIDR 0.0.0.0/0) in the routing table of the subnet to use the gateway. 
+* Select the subnet in your VPC console
+* Select the *Routing Table* tab in the window below the subnet list and then on the link of the routing table which starts with a *rb-*
+* Select the *Routes* tab in the new window and there on the button "Edit routes"
+* Add a new routing entry with the destination *0.0.0.0/0* and select your *Internet Gateway* as target
+ 
 Now your data center is connected to the internet and all servers with a public IP are reachable from the internet. 
 
 === Create the ssh key pair for access to the Linux servers
 
 * To log-in into newly provisioned servers, you need to provide a public ssh-key during the deployment where you have the private key.
-* This key pair can be created in the AWS console in the EC2 dashboard where you can select "key pairs" and then "Create key pair".
+* This key pair can be created in the AWS console in the EC2 dashboard where you can select "key pairs" and then "Create key pair". The EC2 dashboard can be found in the service menu on top of the AWS console. 
 * Provide a name, so that you can identify the key during the later use.
 * Select ppk as file format as this format is important for the later use in the game
 * When you click on "create key pair" the private key file will be downloaded
@@ -84,7 +69,25 @@ WARNING: This private key file will always be needed to access a server on AWS a
 
 === Create the EC2 instances for Web and DB
 
-* Open the EC2 console and launch the two server instances as specified in the beginning of the document.
+* Open the EC2 console in the Service menu on top and launch the two server instances with the following specification.
+
+=== Web server:
+
+* AMI Image: Red Hat Enterprise Linux 8 (HVM), SSD Volume Type
+* Instance Size: t2.micro
+* Instance Configuration: Select your own VPC from the dropdown menu
+* Disk Size: 10GB
+* Tags: Key = Managed  Value = Manual
+* Security Group rules: SSH, HTTP, and HTTPS from any source (0.0.0.0/0)
+
+=== Database server:
+
+* AMI Image: Red Hat Enterprise Linux 8 (HVM), SSD Volume Type
+* Instance Size: t2.micro
+* Instance Configuration: Select your own VPC from the dropdown menu
+* Disk Size: 10GB
+* Tags: Key = Managed  Value = Manual
+* Security Group rules: SSH from any source, mongodb (Custom TCP, Port 27017) from source 10.4.0.0/20
 
 === Configure the database server
 
@@ -194,13 +197,3 @@ In the next sprints of the game, you will deploy the resources with Ansible. The
 
 * Open the EC2 console and select both running instances and set the *Instance state* to *Terminate* and wait until both instances are terminated.
 * Open the VPC console and select your VPC and delete the VPC
-
-== Claim your points
-
-To claim your points for the successful completed sprint, please log-in to the AWS Console and open the EC2 Dashboard. 
-Select the webserver instance and lookup the public IP-Address of the instance.
-Communicate the IP-Address to the facilitator, so that he can prove the completion.
-The first team will get 10 points for the completion, the next 9 and so on. 
-
-WARNING: This sprint counts as successfully finished when your web shop is reachable under the IP and the facilitator has proven the availability!
-
