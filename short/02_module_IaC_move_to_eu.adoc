@@ -5,15 +5,14 @@
 Due to a new regulation requirement it is no longer allowed to run the shop in the US. Therefore, you need to *delete the resources in the US* and to *deploy the shop into AWS region Europe (Frankfurt), shortname eu-central-1*. Because your complete application deployment is automated, this should be straight forward. A couple of things have to be taken care of, though: 
 
 * First and foremost you have to point the workflow to the new region.
-* The AMI IDs are region-specific in AWS, so you have to look up the AMI ID again.
+* The AMI IDs are region-specific in AWS, so you have to change the AMI ID, too.
 
 So here are your tasks:
 
-* First look up the AMI ID like you have done during the last sprint, only now for the new region. 
 * In the *EXTRA VARIABLES* of your workflow *iacstart* change
 ** *region* to *eu-central-1*
 ** *aws_zone* to *eu-central-1a*
-** Change *ami_id* to the ID you looked up
+** Change *ami_id* to *ami-00f69856ea899baec*
 
 TIP: *aws_zone* is one of the availability zones AWS provides in every region.
 
@@ -24,11 +23,17 @@ And one last thing:
 * Find the *REGIONS* field, delete the old region and choose the correct new region from the drop-down
 * *SAVE*
 
-When you are done with these steps just run the workflow again.
+When you are done with these steps just run the workflow again. 
 
-== Claim your points
+WARNING: Wait until the last step becomes green again.
 
-To claim your points for the successful completed sprint, please log-in to the AWS Console and open the EC2 Dashboard. 
-Select the webserver instance and lookup the public IP-Address of the instance.
-Communicate the IP-Address to the facilitator, so that he can prove the completion.
+== Access your Webshop
 
+To access the shop:
+
+* Log-in to the AWS Console and open the EC2 Dashboard (Services->EC2). 
+* Make sure you are in region *Europe (Frankfurt) eu-central-1* (upper right side in the AWS console)
+* Select the webserver instance *iacstart_web* and lookup the public IP Address of the instance.
+* Copy the IP address, open a new browser tab, paste and open it.
+
+*Now you are open for business in Europe!*
