@@ -1,0 +1,27 @@
+:URL: https://christianschreiner.github.io/
+
+= IaCStart - Overview of the modules
+
+Module 0 - Build your app on AWS
+
+{URL}/00_module_aws_handson.html
+
+Module 1 - Let Ansible do the job
+
+{URL}/01_module_IaC_deployment.html
+
+Module 2 - Move to good old europe
+
+{URL}/02_module_IaC_move_to_eu.html
+
+Module 3 - Use NetApp CVS to make it fast and reliable
+
+{URL}/03_module_IaC_use_netapp.html
+
+
+
+
+
+
+
+
