@@ -2,7 +2,7 @@
 
 :nfs-share: 10.10.10.4:/elated-fervent-engelbart
 
-= IaCStart - Scale the frontend to cope with the load
+= IaCStart - Switch to NetApp Enterprise Storage
 
 The marketing department has changed the process to ship new images for the web site. At the moment the images are served from an external service, which isn't reliable enough. 
 
